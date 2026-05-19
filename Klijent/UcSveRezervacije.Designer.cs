@@ -57,7 +57,6 @@
             btnObrisi.TabIndex = 2;
             btnObrisi.Text = "🗑️Obriši";
             btnObrisi.UseVisualStyleBackColor = true;
-            btnObrisi.Click += btnObrisi_Click;
             // 
             // btnRefresh
             // 
@@ -68,7 +67,6 @@
             btnRefresh.TabIndex = 1;
             btnRefresh.Text = "🔄 Osveži";
             btnRefresh.UseVisualStyleBackColor = true;
-            btnRefresh.Click += btnRefresh_Click;
             // 
             // lblNaslov
             // 
@@ -89,7 +87,6 @@
             dgvRezervacije.RowHeadersWidth = 51;
             dgvRezervacije.Size = new Size(736, 360);
             dgvRezervacije.TabIndex = 1;
-            dgvRezervacije.CellDoubleClick += dgvRezervacije_CellDoubleClick;
             // 
             // UcSveRezervacije
             // 
@@ -99,7 +96,6 @@
             Controls.Add(pnlHeader);
             Name = "UcSveRezervacije";
             Size = new Size(736, 420);
-            Load += UcSveRezervacije_Load;
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRezervacije).EndInit();
@@ -108,10 +104,10 @@
 
         #endregion
 
-        private Panel pnlHeader;
-        private Button btnRefresh;
-        private Label lblNaslov;
-        private DataGridView dgvRezervacije;
-        private Button btnObrisi;
+        public Panel pnlHeader;
+        public Button btnRefresh;
+        public Label lblNaslov;
+        public DataGridView dgvRezervacije;
+        public Button btnObrisi;
     }
 }

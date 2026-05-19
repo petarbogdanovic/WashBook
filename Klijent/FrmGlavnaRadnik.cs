@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.GuiControllers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,8 +19,11 @@ namespace Klijent
         public FrmGlavnaRadnik()
         {
             InitializeComponent();
+            MainCoordinator.Instanca.RegistrujFrmGlavnaRadnik(this);
             StilizujSidebar();
         }
+
+        
 
         private void StilizujSidebar()
         {
@@ -76,7 +80,7 @@ namespace Klijent
         {
             Radnik r = MainCoordinator.Instanca.PrijavljeniRadnik;
             lblKorisnik.Text = $"{r.Ime} {r.Prezime}";
-            PrikaziKontrol(new UcSveRezervacije());
+            PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
             PostaviAktivnoDugme(btnSveRezervacije);
         }
 
@@ -101,55 +105,23 @@ namespace Klijent
         }
 
 
-        //private void UcitajRezervacije()
-        //{
-        //    try
-        //    {
-        //        Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-        //            Operacija.VratiListuRezervacija, "1=1");
-
-        //        if (!odgovor.Uspesno)
-        //        {
-        //            MessageBox.Show(odgovor.Greska, "Greška",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //            return;
-        //        }
-
-        //        List<Rezervacija> lista = Komunikacija.Instance
-        //            .Serializer.ReadType<List<Rezervacija>>(odgovor.Objekat);
-
-        //        dgvRezervacije.DataSource = lista;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Greška",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
-
-        //private void novaRezervacijaToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    FrmRezervacija frm = new FrmRezervacija();
-        //    frm.ShowDialog();
-        //    UcitajRezervacije();
-        //}
 
         private void btnSveRezervacije_Click(object sender, EventArgs e)
         {
             PostaviAktivnoDugme(btnSveRezervacije);
-            PrikaziKontrol(new UcSveRezervacije());
+            PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
         }
 
         private void btnNovaRezervacija_Click(object sender, EventArgs e)
         {
             PostaviAktivnoDugme(btnNovaRezervacija);
-            PrikaziKontrol(new UCNovaRez());
+            PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
         }
 
         private void btnPretraga_Click(object sender, EventArgs e)
         {
             PostaviAktivnoDugme(btnPretraga);
-            PrikaziKontrol(new UcPretragaRezervacija());
+            PrikaziKontrol((UserControl)PretragaGuiController.Instance.CreateUC());
         }
 
         private void btnOdjava_Click(object sender, EventArgs e)

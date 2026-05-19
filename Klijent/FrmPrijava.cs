@@ -1,4 +1,5 @@
-﻿using Zajednicki.Domen;
+﻿using Klijent.GuiControllers;
+using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 
 namespace Klijent

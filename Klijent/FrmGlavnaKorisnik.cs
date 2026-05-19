@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.GuiControllers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,8 +19,11 @@ namespace Klijent
         public FrmGlavnaKorisnik()
         {
             InitializeComponent();
+            MainCoordinator.Instanca.RegistrujFrmGlavnaKorisnik(this);
             StilizujSidebar();
         }
+
+       
 
         private void StilizujSidebar()
         {
@@ -69,14 +73,14 @@ namespace Klijent
         private void btnMojeRezervacije_Click(object sender, EventArgs e)
         {
             PostaviAktivnoDugme(btnMojeRezervacije);
-            PrikaziKontrol(new UcMojeRezervacije());
+            PrikaziKontrol((UserControl)MojeRezervacijeGuiController.Instance.CreateUC());
         }
 
         private void btnNovaRezervacija_Click(object sender, EventArgs e)
         {
 
             PostaviAktivnoDugme(btnNovaRezervacija);
-            PrikaziKontrol(new UCNovaRez());
+            PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
         }
 
         private void btnOdjava_Click(object sender, EventArgs e)
@@ -93,7 +97,7 @@ namespace Klijent
         {
             Korisnik k = MainCoordinator.Instanca.PrijavljeniKorisnik;
             lblKorisnik.Text = $"{k.Ime} {k.Prezime}";
-            PrikaziKontrol(new UcMojeRezervacije());
+            PrikaziKontrol((UserControl)MojeRezervacijeGuiController.Instance.CreateUC());
             PostaviAktivnoDugme(btnMojeRezervacije);
         }
 
@@ -109,7 +113,7 @@ namespace Klijent
             aktivnoDugme.ForeColor = Color.White;
         }
 
-        private void PrikaziKontrol(UserControl uc)
+        public void PrikaziKontrol(UserControl uc)
         {
             pnlSadrzaj.Controls.Clear();
             uc.Dock = DockStyle.Fill;

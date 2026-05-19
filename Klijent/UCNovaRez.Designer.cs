@@ -99,7 +99,6 @@
             btnSacuvaj.TabIndex = 3;
             btnSacuvaj.Text = "Sačuvaj";
             btnSacuvaj.UseVisualStyleBackColor = true;
-            btnSacuvaj.Click += btnSacuvaj_Click;
             // 
             // dtpDatum
             // 
@@ -108,7 +107,6 @@
             dtpDatum.Name = "dtpDatum";
             dtpDatum.Size = new Size(175, 27);
             dtpDatum.TabIndex = 2;
-            dtpDatum.ValueChanged += dtpDatum_ValueChanged;
             // 
             // cmbUsluga
             // 
@@ -117,7 +115,6 @@
             cmbUsluga.Name = "cmbUsluga";
             cmbUsluga.Size = new Size(175, 28);
             cmbUsluga.TabIndex = 1;
-            cmbUsluga.SelectedIndexChanged += cmbUsluga_SelectedIndexChanged;
             // 
             // cmbTipVozila
             // 
@@ -126,7 +123,6 @@
             cmbTipVozila.Name = "cmbTipVozila";
             cmbTipVozila.Size = new Size(175, 28);
             cmbTipVozila.TabIndex = 1;
-            cmbTipVozila.SelectedIndexChanged += cmbTipVozila_SelectedIndexChanged;
             // 
             // lblCena
             // 
@@ -232,7 +228,6 @@
             Controls.Add(pnlHeader);
             Name = "UCNovaRez";
             Size = new Size(890, 495);
-            Load += UserControl1_Load;
             pnlForma.ResumeLayout(false);
             pnlForma.PerformLayout();
             pnlHeader.ResumeLayout(false);
@@ -242,23 +237,23 @@
 
         #endregion
 
-        private Label lblNaslov;
-        private Panel pnlForma;
-        private Button btnSacuvaj;
-        private DateTimePicker dtpDatum;
-        private ComboBox cmbTermin;
-        private ComboBox cmbIzbor;
-        private Label lblTermin;
-        private Label lblDatum;
-        private Label lblIzbor;
-        private Panel pnlHeader;
-        private ComboBox cmbTipVozila;
-        private Label lblTipVozila;
-        private ComboBox cmbUsluga;
-        private Label lblUsluga;
-        private TextBox txtRegistracija;
-        private Label lblCena;
-        private Label lblC;
-        private Label lblRegistracija;
+        public Label lblNaslov;
+        public Panel pnlForma;
+        public Button btnSacuvaj;
+        public DateTimePicker dtpDatum;
+        public ComboBox cmbTermin;
+        public ComboBox cmbIzbor;
+        public Label lblTermin;
+        public Label lblDatum;
+        public Label lblIzbor;
+        public Panel pnlHeader;
+        public ComboBox cmbTipVozila;
+        public Label lblTipVozila;
+        public ComboBox cmbUsluga;
+        public Label lblUsluga;
+        public TextBox txtRegistracija;
+        public Label lblCena;
+        public Label lblC;
+        public Label lblRegistracija;
     }
 }

@@ -57,7 +57,6 @@
             btnStorniraj.TabIndex = 2;
             btnStorniraj.Text = "❌Storniraj";
             btnStorniraj.UseVisualStyleBackColor = true;
-            btnStorniraj.Click += btnStorniraj_Click;
             // 
             // btnRefresh
             // 
@@ -68,7 +67,6 @@
             btnRefresh.TabIndex = 1;
             btnRefresh.Text = "🔄 Osveži";
             btnRefresh.UseVisualStyleBackColor = true;
-            btnRefresh.Click += btnRefresh_Click;
             // 
             // lblNaslov
             // 
@@ -89,7 +87,6 @@
             dgvRezervacije.RowHeadersWidth = 51;
             dgvRezervacije.Size = new Size(833, 435);
             dgvRezervacije.TabIndex = 1;
-            dgvRezervacije.CellDoubleClick += dgvRezervacije_CellDoubleClick;
             // 
             // UcMojeRezervacije
             // 
@@ -99,7 +96,6 @@
             Controls.Add(pnlHeader);
             Name = "UcMojeRezervacije";
             Size = new Size(833, 495);
-            Load += UcMojeRezervacije_Load;
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRezervacije).EndInit();
@@ -108,10 +104,10 @@
 
         #endregion
 
-        private Panel pnlHeader;
-        private Label lblNaslov;
-        private Button btnRefresh;
-        private DataGridView dgvRezervacije;
-        private Button btnStorniraj;
+        public Panel pnlHeader;
+        public Label lblNaslov;
+        public Button btnRefresh;
+        public DataGridView dgvRezervacije;
+        public Button btnStorniraj;
     }
 }

@@ -1,3 +1,5 @@
+using Klijent.GuiControllers;
+
 namespace Klijent
 {
     internal static class Program
@@ -28,9 +30,8 @@ namespace Klijent
                 return;
             }
             
-            var prijava = new FrmPrijava();
-            MainCoordinator.Instanca.RegistrujPrvuFormu(prijava);
-            Application.Run(prijava);
+            
+            Application.Run(new FrmPrijava());
         }
     }
 }

@@ -85,7 +85,6 @@
             btnPretrazi.TabIndex = 3;
             btnPretrazi.Text = "🔍 Pretraži";
             btnPretrazi.UseVisualStyleBackColor = true;
-            btnPretrazi.Click += btnPretrazi_Click;
             // 
             // cmbStatus
             // 
@@ -145,7 +144,6 @@
             Controls.Add(pnlHeader);
             Name = "UcPretragaRezervacija";
             Size = new Size(899, 504);
-            Load += UcPretragaRezervacija_Load;
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             pnlFilter.ResumeLayout(false);
@@ -156,15 +154,15 @@
 
         #endregion
 
-        private Panel pnlHeader;
-        private Label lblNaslov;
-        private Panel pnlFilter;
-        private DateTimePicker dtpDatum;
-        private Label lblStatus;
-        private Label lblDatumOd;
-        private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
-        private Button btnPretrazi;
-        private ComboBox cmbStatus;
-        private DataGridView dgvRezervacije;
+        public Panel pnlHeader;
+        public Label lblNaslov;
+        public Panel pnlFilter;
+        public DateTimePicker dtpDatum;
+        public Label lblStatus;
+        public Label lblDatumOd;
+        public Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
+        public Button btnPretrazi;
+        public ComboBox cmbStatus;
+        public DataGridView dgvRezervacije;
     }
 }
