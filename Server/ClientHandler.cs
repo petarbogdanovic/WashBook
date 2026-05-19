@@ -98,6 +98,11 @@ namespace Server
                             var result = Kontroler.Instance.VratiSveTipoveVozila();
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
+                    case Operacija.KreirajRezervaciju:
+                        {
+                            Rezervacija result = Kontroler.Instance.KreirajRezervaciju();
+                            return new Odgovor { Uspesno = true, Objekat = result };
+                        }
                     case Operacija.UbaciRezervaciju:
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);

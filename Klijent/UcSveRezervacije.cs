@@ -114,7 +114,7 @@ namespace Klijent
             string[] vidljive = {  "DatumRezervacije",
                                    "Termin", "ImeKorisnika",
                                    "StatusRezervacije","NazivTipVozila",
-                                    "Usluga","Registracija", "Cena" };
+                                    "NazivUsluge","Registracija", "Cena" };
 
             foreach (string ime in vidljive)
             {

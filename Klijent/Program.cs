@@ -27,8 +27,10 @@ namespace Klijent
                     "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            Application.Run(new FrmPrijava());
+            
+            var prijava = new FrmPrijava();
+            MainCoordinator.Instanca.RegistrujPrvuFormu(prijava);
+            Application.Run(prijava);
         }
     }
 }

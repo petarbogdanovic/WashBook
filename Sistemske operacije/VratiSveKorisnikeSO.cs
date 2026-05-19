@@ -5,12 +5,12 @@ using Zajednicki.Domen;
 
 namespace Sistemske_operacije
 {
-    public class VratiSveGradoveSO : BaseSO
+    public class VratiSveKorisnikeSO : BaseSO
     {
-        public List<Grad> Result { get; set; }
+        public List<Korisnik> Result { get; set; }
         protected override void ExecuteConcreteOperation()
         {
-            Result = broker.GetAll(new Grad()).Cast<Grad>().ToList();
+            Result = broker.GetAll(new Korisnik()).Cast<Korisnik>().ToList();
         }
     }
 }

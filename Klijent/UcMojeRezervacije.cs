@@ -120,8 +120,10 @@ namespace Klijent
 
             if (dgvRezervacije.Columns.Contains("IdRezervacija"))
                 dgvRezervacije.Columns["IdRezervacija"].HeaderText = "ID";
-            if (dgvRezervacije.Columns.Contains("Termin"))
+            if (dgvRezervacije.Columns.Contains("Termin")) { 
                 dgvRezervacije.Columns["Termin"].HeaderText = "Termin";
+                dgvRezervacije.Columns["Termin"].DefaultCellStyle.Format = "dd.MM.yyyy. | HH:mm";
+            }
             if (dgvRezervacije.Columns.Contains("ImeRadnika"))
                 dgvRezervacije.Columns["ImeRadnika"].HeaderText = "Radnik";
             if (dgvRezervacije.Columns.Contains("StatusRezervacije"))
@@ -195,7 +197,6 @@ namespace Klijent
 
             try
             {
-                MessageBox.Show($"ID: {selected.IdRezervacija}\nStatus: {selected.StatusRezervacije}\nTermin: {selected.Termin}");
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
                     Operacija.StornirajRezervaciju, selected);
 

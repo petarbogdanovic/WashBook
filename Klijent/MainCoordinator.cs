@@ -49,5 +49,10 @@ namespace Klijent
             aktivnaForma.Close();
             PrikaziFormu(new FrmPrijava());
         }
+
+        internal void RegistrujPrvuFormu(Form f)
+        {
+            aktivnaForma = f;
+        }
     }
 }

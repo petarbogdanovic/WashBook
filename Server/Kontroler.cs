@@ -54,6 +54,13 @@ namespace Server
             so.ExecuteTemplate();
             return so.Result;
         }
+
+        public Rezervacija KreirajRezervaciju()
+        {
+            KreirajRezervacijuSO so = new KreirajRezervacijuSO();
+            so.ExecuteTemplate();
+            return so.Result;
+        }
         public void UbaciRezervaciju(Rezervacija rezervacija)
         {
             UbaciRezervacijuSO so = new UbaciRezervacijuSO(rezervacija);

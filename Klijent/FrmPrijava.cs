@@ -13,7 +13,7 @@ namespace Klijent
         private void btnPrijava_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtKorisnickoIme.Text) ||
-        string.IsNullOrWhiteSpace(txtSifra.Text))
+                string.IsNullOrWhiteSpace(txtSifra.Text))
             {
                 MessageBox.Show("Unesite korisničko ime i šifru.",
                                 "Greška", MessageBoxButtons.OK, MessageBoxIcon.Warning);

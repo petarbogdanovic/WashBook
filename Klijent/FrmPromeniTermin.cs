@@ -20,6 +20,7 @@ namespace Klijent
             this.rezervacija = rezervacija;
             StilizujFormu();
 
+
         }
 
         private void StilizujFormu()
@@ -42,6 +43,11 @@ namespace Klijent
 
             cmbTermin.Font = new Font("Segoe UI", 10);
             cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTermin.Format += (s, ev) =>
+            {
+                if (ev.Value is DateTime dt)
+                    ev.Value = dt.ToString("HH:mm");
+            };
 
             btnSacuvaj.FlatStyle = FlatStyle.Flat;
             btnSacuvaj.FlatAppearance.BorderSize = 0;
@@ -59,8 +65,11 @@ namespace Klijent
 
             dtpDatum.Value = rezervacija.Termin.Date;
             dtpDatum.MinDate = DateTime.Today;
+           
+           
 
             UcitajSlobodneTermine(rezervacija.Termin.Date, rezervacija.Termin);
+
         }
 
         private void UcitajSlobodneTermine(DateTime datum, DateTime trenutniTermin)
@@ -85,20 +94,17 @@ namespace Klijent
                 {
                     DateTime t = datum.Date.AddHours(sat);
                     bool jeZauzet = zauzeti.Any(z => z.Hour == sat);
-                    bool jeKurrentni = t.Hour == trenutniTermin.Hour
-                                    && datum.Date == trenutniTermin.Date;
+                    bool jeKurrentni = t.Hour == trenutniTermin.Hour && datum.Date == trenutniTermin.Date;
+
+                    if(t <= DateTime.Now && !jeKurrentni) continue;
+
                     if (!jeZauzet || jeKurrentni)
                         slobodni.Add(t);
                 }
 
                 cmbTermin.DataSource = null;
                 cmbTermin.DataSource = slobodni;
-                cmbTermin.Format += (s, ev) =>
-                {
-                    if (ev.Value is DateTime dt)
-                        ev.Value = dt.ToString("HH:mm");
-                };
-
+                
                 cmbTermin.SelectedItem = slobodni
                     .FirstOrDefault(t => t.Hour == trenutniTermin.Hour);
             }

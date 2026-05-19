@@ -14,6 +14,7 @@ namespace Klijent
     public partial class UCNovaRez : UserControl
     {
         private List<DateTime> slobodniTermini = new List<DateTime>();
+        private Rezervacija novaRezervacija;
 
         public UCNovaRez()
         {
@@ -49,6 +50,11 @@ namespace Klijent
 
             cmbTermin.Font = new Font("Segoe UI", 10);
             cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTermin.Format += (s, e) =>
+            {
+                if (e.Value is DateTime dt)
+                    e.Value = dt.ToString("HH:mm");
+            };
 
             btnSacuvaj.FlatStyle = FlatStyle.Flat;
             btnSacuvaj.FlatAppearance.BorderSize = 0;
@@ -112,14 +118,16 @@ namespace Klijent
                     korisnik = MainCoordinator.Instanca.PrijavljeniKorisnik;
                 }
 
-                Rezervacija rezervacija = new Rezervacija
+                if (novaRezervacija == null)
                 {
-                    DatumRezervacije = DateTime.Today,
-                    Termin = (DateTime)cmbTermin.SelectedItem,
-                    StatusRezervacije = StatusRezervacije.KREIRANA,
-                    Radnik = radnik,
-                    Korisnik = korisnik
-                };
+                    MessageBox.Show("Rezervacija nije inicijalizovana.", "Greška",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                novaRezervacija.Termin = (DateTime)cmbTermin.SelectedItem;
+                novaRezervacija.Radnik = radnik;
+                novaRezervacija.Korisnik = korisnik;
 
                 Usluga izabranaUsluga = (Usluga)cmbUsluga.SelectedItem;
                 TipVozila izabranTip = (TipVozila)cmbTipVozila.SelectedItem;
@@ -139,10 +147,10 @@ namespace Klijent
                     }
                 }
                 };
-                rezervacija.Stavke.Add(stavka);
+                novaRezervacija.Stavke.Add(stavka);
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.UbaciRezervaciju, rezervacija);
+                    Operacija.UbaciRezervaciju, novaRezervacija);
 
                 if (!odgovor.Uspesno)
                 {
@@ -157,7 +165,19 @@ namespace Klijent
                 // Resetuj formu
                 dtpDatum.Value = DateTime.Today;
                 UcitajSlobodneTermine(DateTime.Today);
-                cmbIzbor.SelectedIndex = 0;
+                txtRegistracija.Clear();
+                if (cmbIzbor.Items.Count > 0) cmbIzbor.SelectedIndex = 0;
+                if (cmbTipVozila.Items.Count > 0) cmbTipVozila.SelectedIndex = 0;
+
+                try
+                {
+                    Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(
+                        Operacija.KreirajRezervaciju);
+                    if (odgKreiraj.Uspesno)
+                        novaRezervacija = Komunikacija.Instance
+                            .Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
+                }
+                catch { novaRezervacija = null;  }
             }
             catch (Exception ex)
             {
@@ -185,9 +205,14 @@ namespace Klijent
 
                 // Generiši sve termine od 08:00 do 19:00
                 List<DateTime> sviTermini = new List<DateTime>();
-                for (int sat = 8; sat <= 19; sat++)
-                    sviTermini.Add(datum.Date.AddHours(sat));
+                for (int sat = 8; sat <= 19; sat++) { 
+                    DateTime t = datum.Date.AddHours(sat);
 
+                    //Uslov da su termini u budućnosti, jer ne možemo rezervisati termin koji je već prošao
+                    if (t > DateTime.Now)
+                        sviTermini.Add(t);
+
+                }
                 // Slobodni = svi - zauzeti
                 slobodniTermini = sviTermini
                     .Where(t => !zauzeti.Any(z => z.Hour == t.Hour))
@@ -195,11 +220,7 @@ namespace Klijent
 
                 cmbTermin.DataSource = null;
                 cmbTermin.DataSource = slobodniTermini;
-                cmbTermin.Format += (s, e) =>
-                {
-                    if (e.Value is DateTime dt)
-                        e.Value = dt.ToString("HH:mm");
-                };
+                
             }
             catch (Exception ex)
             {
@@ -210,6 +231,20 @@ namespace Klijent
 
         private void UserControl1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
+                if (odgKreiraj.Uspesno)
+                {
+                    novaRezervacija = Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Sistem ne može da kreira rezervaciju: {ex.Message}",
+                "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
             {
                 lblIzbor.Text = "Korisnik:";
