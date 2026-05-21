@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Server
 {
-    public class TCPServer
+    public class Server
     {
         private Socket serverSocket;
         private bool radi;
         private Action<string> log;
 
-        public TCPServer(Action<string> log)
+        public Server(Action<string> log)
         {
             this.log = log;
         }

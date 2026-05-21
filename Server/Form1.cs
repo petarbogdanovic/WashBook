@@ -2,7 +2,7 @@ namespace Server
 {
     public partial class Form1 : Form
     {
-        private TCPServer server;
+        private Server server;
         private Thread serverThread;
         public Form1()
         {
@@ -22,7 +22,7 @@ namespace Server
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            server = new TCPServer(Log);
+            server = new Server(Log);
 
             serverThread = new Thread(() =>
             {
