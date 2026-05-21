@@ -18,45 +18,11 @@ namespace Klijent
         {
             InitializeComponent();
             this.rezervacija = rezervacija;
-            StilizujFormu();
 
 
         }
 
-        private void StilizujFormu()
-        {
-            BackColor = Color.FromArgb(244, 246, 249);
-
-            lblInfo.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            lblInfo.ForeColor = Color.FromArgb(30, 42, 58);
-            lblInfo.TextAlign = ContentAlignment.MiddleCenter;
-            lblInfo.Height = 60;
-            lblInfo.Padding = new Padding(0, 10, 0, 10);
-
-            lblDatum.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            lblDatum.ForeColor = Color.FromArgb(80, 100, 120);
-
-            lblTermin.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            lblTermin.ForeColor = Color.FromArgb(80, 100, 120);
-
-            dtpDatum.Font = new Font("Segoe UI", 10);
-
-            cmbTermin.Font = new Font("Segoe UI", 10);
-            cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbTermin.Format += (s, ev) =>
-            {
-                if (ev.Value is DateTime dt)
-                    ev.Value = dt.ToString("HH:mm");
-            };
-
-            btnSacuvaj.FlatStyle = FlatStyle.Flat;
-            btnSacuvaj.FlatAppearance.BorderSize = 0;
-            btnSacuvaj.BackColor = Color.FromArgb(46, 134, 222);
-            btnSacuvaj.ForeColor = Color.White;
-            btnSacuvaj.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            btnSacuvaj.Height = 44;
-            btnSacuvaj.Cursor = Cursors.Hand;
-        }
+       
 
         private void FrmPromeniTermin_Load(object sender, EventArgs e)
         {
@@ -65,8 +31,8 @@ namespace Klijent
 
             dtpDatum.Value = rezervacija.Termin.Date;
             dtpDatum.MinDate = DateTime.Today;
-           
-           
+
+
 
             UcitajSlobodneTermine(rezervacija.Termin.Date, rezervacija.Termin);
 
@@ -96,7 +62,7 @@ namespace Klijent
                     bool jeZauzet = zauzeti.Any(z => z.Hour == sat);
                     bool jeKurrentni = t.Hour == trenutniTermin.Hour && datum.Date == trenutniTermin.Date;
 
-                    if(t <= DateTime.Now && !jeKurrentni) continue;
+                    if (t <= DateTime.Now && !jeKurrentni) continue;
 
                     if (!jeZauzet || jeKurrentni)
                         slobodni.Add(t);
@@ -104,7 +70,7 @@ namespace Klijent
 
                 cmbTermin.DataSource = null;
                 cmbTermin.DataSource = slobodni;
-                
+
                 cmbTermin.SelectedItem = slobodni
                     .FirstOrDefault(t => t.Hour == trenutniTermin.Hour);
             }
@@ -162,6 +128,11 @@ namespace Klijent
         private void dtpDatum_ValueChanged(object sender, EventArgs e)
         {
             UcitajSlobodneTermine(dtpDatum.Value, DateTime.MinValue);
+        }
+
+        private void lblInfo_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

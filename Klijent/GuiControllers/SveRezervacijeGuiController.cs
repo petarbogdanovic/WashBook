@@ -27,7 +27,6 @@ namespace Klijent.GuiControllers
         public Control CreateUC()
         {
             uc = new UcSveRezervacije();
-            StilizujKontrole();
 
             // Vezivanje event handlera
             uc.btnRefresh.Click += BtnRefresh_Click;
@@ -40,52 +39,7 @@ namespace Klijent.GuiControllers
             return uc;
         }
 
-        private void StilizujKontrole()
-        {
-            // Header
-            uc.pnlHeader.BackColor = Color.White;
-            uc.pnlHeader.Padding = new Padding(20, 0, 20, 0);
-
-            uc.lblNaslov.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            uc.lblNaslov.ForeColor = Color.FromArgb(30, 42, 58);
-            uc.lblNaslov.TextAlign = ContentAlignment.MiddleLeft;
-
-            uc.btnRefresh.FlatStyle = FlatStyle.Flat;
-            uc.btnRefresh.FlatAppearance.BorderSize = 0;
-            uc.btnRefresh.BackColor = Color.FromArgb(46, 134, 222);
-            uc.btnRefresh.ForeColor = Color.White;
-            uc.btnRefresh.Font = new Font("Segoe UI", 9);
-            uc.btnRefresh.Height = 34;
-            uc.btnRefresh.Width = 100;
-            uc.btnRefresh.Cursor = Cursors.Hand;
-
-            // DataGridView
-            uc.dgvRezervacije.BackgroundColor = Color.FromArgb(244, 246, 249);
-            uc.dgvRezervacije.BorderStyle = BorderStyle.None;
-            uc.dgvRezervacije.RowHeadersVisible = false;
-            uc.dgvRezervacije.AllowUserToAddRows = false;
-            uc.dgvRezervacije.ReadOnly = true;
-            uc.dgvRezervacije.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            uc.dgvRezervacije.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            uc.dgvRezervacije.Font = new Font("Segoe UI", 9);
-            uc.dgvRezervacije.RowTemplate.Height = 40;
-            uc.dgvRezervacije.GridColor = Color.FromArgb(220, 228, 240);
-
-            // Header stil
-            uc.dgvRezervacije.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 42, 58);
-            uc.dgvRezervacije.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            uc.dgvRezervacije.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            uc.dgvRezervacije.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 0, 0, 0);
-            uc.dgvRezervacije.ColumnHeadersHeight = 44;
-            uc.dgvRezervacije.EnableHeadersVisualStyles = false;
-
-            // Row stil
-            uc.dgvRezervacije.DefaultCellStyle.SelectionBackColor = Color.FromArgb(46, 134, 222);
-            uc.dgvRezervacije.DefaultCellStyle.SelectionForeColor = Color.White;
-            uc.dgvRezervacije.DefaultCellStyle.Padding = new Padding(10, 0, 0, 0);
-            uc.dgvRezervacije.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-        }
-
+        
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             UcitajRezervacije();

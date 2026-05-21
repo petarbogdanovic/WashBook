@@ -20,54 +20,8 @@ namespace Klijent
         {
             InitializeComponent();
             MainCoordinator.Instanca.RegistrujFrmGlavnaKorisnik(this);
-            StilizujSidebar();
-        }
 
-       
-
-        private void StilizujSidebar()
-        {
-            lblLogo.Text = "🚗 WashBook";
-            lblLogo.ForeColor = Color.White;
-            lblLogo.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblLogo.TextAlign = ContentAlignment.MiddleCenter;
-            lblLogo.Height = 70;
-            lblLogo.Padding = new Padding(0, 10, 0, 10);
-
-            lblKorisnik.ForeColor = Color.FromArgb(150, 180, 210);
-            lblKorisnik.Font = new Font("Segoe UI", 9);
-            lblKorisnik.TextAlign = ContentAlignment.MiddleCenter;
-            lblKorisnik.Height = 35;
-
-            Panel separator = new Panel
-            {
-                Height = 1,
-                Dock = DockStyle.Top,
-                BackColor = Color.FromArgb(50, 80, 110)
-            };
-            pnlSidebar.Controls.Add(separator);
-
-            StilizujDugme(btnMojeRezervacije, "📋  Moje rezervacije");
-            StilizujDugme(btnNovaRezervacija, "➕  Nova rezervacija");
-            StilizujDugme(btnOdjava, "🚪  Odjava");
-
-            btnOdjava.ForeColor = Color.FromArgb(220, 100, 100);
-        }
-
-        private void StilizujDugme(Button btn, string tekst)
-        {
-            btn.Text = tekst;
-            btn.ForeColor = Color.FromArgb(200, 220, 240);
-            btn.BackColor = Color.Transparent;
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 60, 90);
-            btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(46, 134, 222);
-            btn.Font = new Font("Segoe UI", 10);
-            btn.TextAlign = ContentAlignment.MiddleLeft;
-            btn.Padding = new Padding(20, 0, 0, 0);
-            btn.Height = 48;
-            btn.Cursor = Cursors.Hand;
+            
         }
 
         private void btnMojeRezervacije_Click(object sender, EventArgs e)

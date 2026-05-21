@@ -18,15 +18,14 @@ namespace Klijent.GuiControllers
         }
         private MainCoordinator() { }
 
-        // Pristupno stanje
         public Radnik PrijavljeniRadnik { get; set; }
         public Korisnik PrijavljeniKorisnik { get; set; }
 
-        // Reference na glavne forme
+       
         private FrmGlavnaRadnik frmGlavnaRadnik;
         private FrmGlavnaKorisnik frmGlavnaKorisnik;
 
-        // === Prijava i odjava ===
+        
         public void PrijaviRadnika(Radnik radnik)
         {
             PrijavljeniRadnik = radnik;
@@ -56,11 +55,11 @@ namespace Klijent.GuiControllers
             frmPrijava.Show();
         }
 
-        // === Registracija glavnih formi ===
+      
         public void RegistrujFrmGlavnaRadnik(FrmGlavnaRadnik frm) => frmGlavnaRadnik = frm;
         public void RegistrujFrmGlavnaKorisnik(FrmGlavnaKorisnik frm) => frmGlavnaKorisnik = frm;
 
-        // === Prikaz panela u glavnoj formi radnika ===
+        
         public void ShowSveRezervacije(object sender, EventArgs e)
         {
             if (frmGlavnaRadnik != null)
@@ -79,7 +78,7 @@ namespace Klijent.GuiControllers
                 frmGlavnaRadnik.PrikaziKontrol((UserControl)PretragaGuiController.Instance.CreateUC());
         }
 
-        // === Prikaz panela u glavnoj formi korisnika ===
+   
         public void ShowMojeRezervacije(object sender, EventArgs e)
         {
             if (frmGlavnaKorisnik != null)

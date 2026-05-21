@@ -10,13 +10,12 @@ namespace Zajednicki.Domen
     {
         public int IdUsluga { get; set; }
         public string Naziv { get; set; }
-        public string Opis { get; set; }
         public double Cena { get; set; }
         public TipVozila TipVozila { get; set; }
         [JsonIgnore] public string PrimaryKey => $"idUsluga = {IdUsluga}";
-        [JsonIgnore] public string UpdateValues => $"naziv = '{Naziv}', opis = '{Opis}'";
+        [JsonIgnore] public string UpdateValues => $"naziv = '{Naziv}'";
         [JsonIgnore] public string TableName => "Usluga";
-        [JsonIgnore] public string Values => $"'{Naziv}', '{Opis}'";
+        [JsonIgnore] public string Values => $"'{Naziv}'";
 
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
@@ -28,7 +27,6 @@ namespace Zajednicki.Domen
                 {
                     IdUsluga = (int)reader["idUsluga"],
                     Naziv = (string)reader["naziv"],
-                    //Opis = reader["opis"] == DBNull.Value ? "" : (string)reader["opis"],
                     Cena = Convert.ToDouble(reader["cena"]),
                     TipVozila = new TipVozila { IdTipVozila = (int)reader["idTipVozila"] }
                 };

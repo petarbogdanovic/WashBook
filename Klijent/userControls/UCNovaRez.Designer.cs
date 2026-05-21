@@ -54,11 +54,14 @@
             // 
             lblNaslov.AutoSize = true;
             lblNaslov.Dock = DockStyle.Left;
-            lblNaslov.Location = new Point(0, 0);
+            lblNaslov.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblNaslov.ForeColor = Color.FromArgb(30, 42, 58);
+            lblNaslov.Location = new Point(20, 0);
             lblNaslov.Name = "lblNaslov";
-            lblNaslov.Size = new Size(119, 20);
+            lblNaslov.Size = new Size(234, 38);
             lblNaslov.TabIndex = 0;
             lblNaslov.Text = "Nova rezervacija";
+            lblNaslov.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // pnlForma
             // 
@@ -93,19 +96,26 @@
             // 
             // btnSacuvaj
             // 
+            btnSacuvaj.BackColor = Color.FromArgb(46, 134, 222);
+            btnSacuvaj.Cursor = Cursors.Hand;
+            btnSacuvaj.FlatAppearance.BorderSize = 0;
+            btnSacuvaj.FlatStyle = FlatStyle.Flat;
+            btnSacuvaj.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSacuvaj.ForeColor = Color.White;
             btnSacuvaj.Location = new Point(643, 320);
             btnSacuvaj.Name = "btnSacuvaj";
-            btnSacuvaj.Size = new Size(110, 41);
+            btnSacuvaj.Size = new Size(160, 46);
             btnSacuvaj.TabIndex = 3;
             btnSacuvaj.Text = "Sačuvaj";
-            btnSacuvaj.UseVisualStyleBackColor = true;
+            btnSacuvaj.UseVisualStyleBackColor = false;
             // 
             // dtpDatum
             // 
+            dtpDatum.Font = new Font("Segoe UI", 10F);
             dtpDatum.Format = DateTimePickerFormat.Short;
             dtpDatum.Location = new Point(400, 79);
             dtpDatum.Name = "dtpDatum";
-            dtpDatum.Size = new Size(175, 27);
+            dtpDatum.Size = new Size(175, 30);
             dtpDatum.TabIndex = 2;
             // 
             // cmbUsluga
@@ -135,88 +145,109 @@
             // lblC
             // 
             lblC.AutoSize = true;
+            lblC.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblC.ForeColor = Color.FromArgb(8, 100, 120);
             lblC.Location = new Point(252, 320);
             lblC.Name = "lblC";
-            lblC.Size = new Size(45, 20);
+            lblC.Size = new Size(47, 20);
             lblC.TabIndex = 0;
             lblC.Text = "Cena:";
             // 
             // lblRegistracija
             // 
             lblRegistracija.AutoSize = true;
+            lblRegistracija.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblRegistracija.ForeColor = Color.FromArgb(8, 100, 120);
             lblRegistracija.Location = new Point(252, 268);
             lblRegistracija.Name = "lblRegistracija";
-            lblRegistracija.Size = new Size(89, 20);
+            lblRegistracija.Size = new Size(94, 20);
             lblRegistracija.TabIndex = 0;
             lblRegistracija.Text = "Registracija:";
             // 
             // lblUsluga
             // 
             lblUsluga.AutoSize = true;
+            lblUsluga.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblUsluga.ForeColor = Color.FromArgb(8, 100, 120);
             lblUsluga.Location = new Point(252, 225);
             lblUsluga.Name = "lblUsluga";
-            lblUsluga.Size = new Size(57, 20);
+            lblUsluga.Size = new Size(61, 20);
             lblUsluga.TabIndex = 0;
             lblUsluga.Text = "Usluga:";
             // 
             // cmbTermin
             // 
+            cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTermin.Font = new Font("Segoe UI", 10F);
+            cmbTermin.FormatString = "HH:mm";
             cmbTermin.FormattingEnabled = true;
             cmbTermin.Location = new Point(400, 126);
             cmbTermin.Name = "cmbTermin";
-            cmbTermin.Size = new Size(175, 28);
+            cmbTermin.Size = new Size(175, 31);
             cmbTermin.TabIndex = 1;
             // 
             // lblTipVozila
             // 
             lblTipVozila.AutoSize = true;
+            lblTipVozila.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTipVozila.ForeColor = Color.FromArgb(8, 100, 120);
             lblTipVozila.Location = new Point(252, 177);
             lblTipVozila.Name = "lblTipVozila";
-            lblTipVozila.Size = new Size(76, 20);
+            lblTipVozila.Size = new Size(79, 20);
             lblTipVozila.TabIndex = 0;
             lblTipVozila.Text = "Tip vozila:";
             // 
             // cmbIzbor
             // 
+            cmbIzbor.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbIzbor.Font = new Font("Segoe UI", 10F);
             cmbIzbor.FormattingEnabled = true;
             cmbIzbor.Location = new Point(400, 31);
             cmbIzbor.Name = "cmbIzbor";
-            cmbIzbor.Size = new Size(175, 28);
+            cmbIzbor.Size = new Size(175, 31);
             cmbIzbor.TabIndex = 1;
             // 
             // lblTermin
             // 
             lblTermin.AutoSize = true;
+            lblTermin.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTermin.ForeColor = Color.FromArgb(8, 100, 120);
             lblTermin.Location = new Point(252, 129);
             lblTermin.Name = "lblTermin";
-            lblTermin.Size = new Size(57, 20);
+            lblTermin.Size = new Size(62, 20);
             lblTermin.TabIndex = 0;
             lblTermin.Text = "Termin:";
             // 
             // lblDatum
             // 
             lblDatum.AutoSize = true;
+            lblDatum.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblDatum.ForeColor = Color.FromArgb(8, 100, 120);
             lblDatum.Location = new Point(252, 81);
             lblDatum.Name = "lblDatum";
-            lblDatum.Size = new Size(132, 20);
+            lblDatum.Size = new Size(140, 20);
             lblDatum.TabIndex = 0;
             lblDatum.Text = "Datum rezervacije:";
             // 
             // lblIzbor
             // 
             lblIzbor.AutoSize = true;
+            lblIzbor.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblIzbor.ForeColor = Color.FromArgb(8, 100, 120);
             lblIzbor.Location = new Point(252, 34);
             lblIzbor.Name = "lblIzbor";
-            lblIzbor.Size = new Size(60, 20);
+            lblIzbor.Size = new Size(62, 20);
             lblIzbor.TabIndex = 0;
             lblIzbor.Text = "lblIzbor";
             // 
             // pnlHeader
             // 
+            pnlHeader.BackColor = Color.White;
             pnlHeader.Controls.Add(lblNaslov);
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
+            pnlHeader.Padding = new Padding(20, 0, 20, 0);
             pnlHeader.Size = new Size(890, 60);
             pnlHeader.TabIndex = 2;
             // 

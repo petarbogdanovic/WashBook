@@ -29,7 +29,7 @@ namespace Klijent.GuiControllers
         public Control CreateUC()
         {
             ucNovaRez = new UCNovaRez();
-            StilizujKontrole();
+           
             SrediFormu();
 
             // Vezivanje event handlera
@@ -41,52 +41,10 @@ namespace Klijent.GuiControllers
             return ucNovaRez;
         }
 
-        private void StilizujKontrole()
-        {
-            ucNovaRez.pnlHeader.BackColor = Color.White;
-            ucNovaRez.pnlHeader.Padding = new Padding(20, 0, 20, 0);
-
-            ucNovaRez.lblNaslov.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            ucNovaRez.lblNaslov.ForeColor = Color.FromArgb(30, 42, 58);
-            ucNovaRez.lblNaslov.TextAlign = ContentAlignment.MiddleLeft;
-
-            Font labelFont = new Font("Segoe UI", 9, FontStyle.Bold);
-            Color labelColor = Color.FromArgb(80, 100, 120);
-            foreach (Control c in ucNovaRez.pnlForma.Controls)
-            {
-                if (c is Label lbl)
-                {
-                    lbl.Font = labelFont;
-                    lbl.ForeColor = labelColor;
-                }
-            }
-
-            ucNovaRez.cmbIzbor.Font = new Font("Segoe UI", 10);
-            ucNovaRez.cmbIzbor.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            ucNovaRez.dtpDatum.Font = new Font("Segoe UI", 10);
-
-            ucNovaRez.cmbTermin.Font = new Font("Segoe UI", 10);
-            ucNovaRez.cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
-            ucNovaRez.cmbTermin.Format += (s, e) =>
-            {
-                if (e.Value is DateTime dt)
-                    e.Value = dt.ToString("HH:mm");
-            };
-
-            ucNovaRez.btnSacuvaj.FlatStyle = FlatStyle.Flat;
-            ucNovaRez.btnSacuvaj.FlatAppearance.BorderSize = 0;
-            ucNovaRez.btnSacuvaj.BackColor = Color.FromArgb(46, 134, 222);
-            ucNovaRez.btnSacuvaj.ForeColor = Color.White;
-            ucNovaRez.btnSacuvaj.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            ucNovaRez.btnSacuvaj.Height = 44;
-            ucNovaRez.btnSacuvaj.Width = 160;
-            ucNovaRez.btnSacuvaj.Cursor = Cursors.Hand;
-        }
-
+     
         private void SrediFormu()
         {
-            // SILAB SK1 korak: sistem kreira prazan objekat Rezervacija
+            
             try
             {
                 Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(

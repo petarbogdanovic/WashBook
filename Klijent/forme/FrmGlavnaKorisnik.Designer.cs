@@ -40,7 +40,7 @@
             // 
             // pnlSidebar
             // 
-            pnlSidebar.BackColor = Color.FromArgb(30, 42, 58);
+            pnlSidebar.BackColor = Color.FromArgb(50, 82, 110);
             pnlSidebar.Controls.Add(btnOdjava);
             pnlSidebar.Controls.Add(btnNovaRezervacija);
             pnlSidebar.Controls.Add(btnMojeRezervacije);
@@ -54,56 +54,92 @@
             // 
             // btnOdjava
             // 
+            btnOdjava.BackColor = Color.Transparent;
+            btnOdjava.Cursor = Cursors.Hand;
             btnOdjava.Dock = DockStyle.Top;
-            btnOdjava.Location = new Point(0, 98);
+            btnOdjava.FlatAppearance.BorderSize = 0;
+            btnOdjava.FlatAppearance.MouseDownBackColor = Color.FromArgb(46, 134, 222);
+            btnOdjava.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 60, 90);
+            btnOdjava.FlatStyle = FlatStyle.Flat;
+            btnOdjava.Font = new Font("Segoe UI", 10F);
+            btnOdjava.ForeColor = Color.FromArgb(220, 100, 100);
+            btnOdjava.Location = new Point(0, 177);
             btnOdjava.Name = "btnOdjava";
-            btnOdjava.Size = new Size(220, 29);
+            btnOdjava.Padding = new Padding(20, 0, 0, 0);
+            btnOdjava.Size = new Size(220, 48);
             btnOdjava.TabIndex = 4;
-            btnOdjava.Text = "button1";
-            btnOdjava.UseVisualStyleBackColor = true;
+            btnOdjava.Text = "🚪  Odjava";
+            btnOdjava.TextAlign = ContentAlignment.MiddleLeft;
+            btnOdjava.UseVisualStyleBackColor = false;
             btnOdjava.Click += btnOdjava_Click;
             // 
             // btnNovaRezervacija
             // 
+            btnNovaRezervacija.BackColor = Color.Transparent;
+            btnNovaRezervacija.Cursor = Cursors.Hand;
             btnNovaRezervacija.Dock = DockStyle.Top;
-            btnNovaRezervacija.Location = new Point(0, 69);
+            btnNovaRezervacija.FlatAppearance.BorderSize = 0;
+            btnNovaRezervacija.FlatAppearance.MouseDownBackColor = Color.FromArgb(46, 134, 222);
+            btnNovaRezervacija.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 60, 90);
+            btnNovaRezervacija.FlatStyle = FlatStyle.Flat;
+            btnNovaRezervacija.Font = new Font("Segoe UI", 10F);
+            btnNovaRezervacija.ForeColor = Color.FromArgb(200, 220, 240);
+            btnNovaRezervacija.Location = new Point(0, 129);
             btnNovaRezervacija.Name = "btnNovaRezervacija";
-            btnNovaRezervacija.Size = new Size(220, 29);
+            btnNovaRezervacija.Padding = new Padding(20, 0, 0, 0);
+            btnNovaRezervacija.Size = new Size(220, 48);
             btnNovaRezervacija.TabIndex = 3;
-            btnNovaRezervacija.Text = "button1";
-            btnNovaRezervacija.UseVisualStyleBackColor = true;
+            btnNovaRezervacija.Text = "➕  Nova rezervacija";
+            btnNovaRezervacija.TextAlign = ContentAlignment.MiddleLeft;
+            btnNovaRezervacija.UseVisualStyleBackColor = false;
             btnNovaRezervacija.Click += btnNovaRezervacija_Click;
             // 
             // btnMojeRezervacije
             // 
+            btnMojeRezervacije.BackColor = Color.Transparent;
+            btnMojeRezervacije.Cursor = Cursors.Hand;
             btnMojeRezervacije.Dock = DockStyle.Top;
-            btnMojeRezervacije.Location = new Point(0, 40);
+            btnMojeRezervacije.FlatAppearance.BorderSize = 0;
+            btnMojeRezervacije.FlatAppearance.MouseDownBackColor = Color.FromArgb(46, 134, 222);
+            btnMojeRezervacije.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 60, 90);
+            btnMojeRezervacije.FlatStyle = FlatStyle.Flat;
+            btnMojeRezervacije.Font = new Font("Segoe UI", 10F);
+            btnMojeRezervacije.ForeColor = Color.FromArgb(200, 220, 240);
+            btnMojeRezervacije.Location = new Point(0, 81);
             btnMojeRezervacije.Name = "btnMojeRezervacije";
-            btnMojeRezervacije.Size = new Size(220, 29);
+            btnMojeRezervacije.Padding = new Padding(20, 0, 0, 0);
+            btnMojeRezervacije.Size = new Size(220, 48);
             btnMojeRezervacije.TabIndex = 2;
-            btnMojeRezervacije.Text = "button1";
-            btnMojeRezervacije.UseVisualStyleBackColor = true;
+            btnMojeRezervacije.Text = "📋  Moje rezervacije";
+            btnMojeRezervacije.TextAlign = ContentAlignment.MiddleLeft;
+            btnMojeRezervacije.UseVisualStyleBackColor = false;
             btnMojeRezervacije.Click += btnMojeRezervacije_Click;
             // 
             // lblKorisnik
             // 
             lblKorisnik.AutoSize = true;
             lblKorisnik.Dock = DockStyle.Top;
-            lblKorisnik.Location = new Point(0, 20);
+            lblKorisnik.ForeColor = Color.FromArgb(150, 180, 210);
+            lblKorisnik.Location = new Point(0, 61);
             lblKorisnik.Name = "lblKorisnik";
             lblKorisnik.Size = new Size(50, 20);
             lblKorisnik.TabIndex = 1;
             lblKorisnik.Text = "label1";
+            lblKorisnik.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblLogo
             // 
             lblLogo.AutoSize = true;
             lblLogo.Dock = DockStyle.Top;
+            lblLogo.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblLogo.ForeColor = Color.White;
             lblLogo.Location = new Point(0, 0);
             lblLogo.Name = "lblLogo";
-            lblLogo.Size = new Size(50, 20);
+            lblLogo.Padding = new Padding(0, 10, 0, 10);
+            lblLogo.Size = new Size(216, 61);
             lblLogo.TabIndex = 0;
-            lblLogo.Text = "label1";
+            lblLogo.Text = "🚗 WashBook";
+            lblLogo.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pnlSadrzaj
             // 

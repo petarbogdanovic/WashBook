@@ -11,12 +11,11 @@ namespace Server
     public class ClientHandler
     {
         private Socket clientSocket;
-
         private JsonNetworkSerializer serializer;
 
         private Action<string> log;
 
-        public ClientHandler(Socket clientSocket, Action<string> logAction = null)
+        public ClientHandler(Socket clientSocket,Action<string> logAction = null)
         {
             this.clientSocket = clientSocket;
             serializer = new JsonNetworkSerializer(clientSocket);
@@ -56,6 +55,8 @@ namespace Server
             }
 
         }
+
+       
 
         private Odgovor IzvrsiOperaciju(Zahtev zahtev)
         {

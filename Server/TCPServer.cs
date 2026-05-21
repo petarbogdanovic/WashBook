@@ -52,8 +52,10 @@ namespace Server
 
         public void Stop()
         {
+            
             radi = false;
             serverSocket.Close();
+            
         }
     }
 }

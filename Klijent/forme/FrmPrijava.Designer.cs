@@ -76,8 +76,9 @@
             txtSifra.Name = "txtSifra";
             txtSifra.Size = new Size(139, 27);
             txtSifra.TabIndex = 1;
+            txtSifra.UseSystemPasswordChar = true;
             // 
-            // FormPrijava
+            // FrmPrijava
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -87,7 +88,7 @@
             Controls.Add(label2);
             Controls.Add(txtKorisnickoIme);
             Controls.Add(label1);
-            Name = "FormPrijava";
+            Name = "FrmPrijava";
             Text = "FormPrijava";
             ResumeLayout(false);
             PerformLayout();

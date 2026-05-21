@@ -40,61 +40,81 @@
             // 
             lblInfo.AutoSize = true;
             lblInfo.Dock = DockStyle.Top;
+            lblInfo.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblInfo.ForeColor = Color.FromArgb(30, 42, 58);
             lblInfo.Location = new Point(0, 0);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(50, 20);
+            lblInfo.Padding = new Padding(0, 10, 0, 10);
+            lblInfo.Size = new Size(63, 45);
             lblInfo.TabIndex = 0;
             lblInfo.Text = "label1";
+            lblInfo.TextAlign = ContentAlignment.MiddleCenter;
+            lblInfo.Click += lblInfo_Click;
             // 
             // lblDatum
             // 
             lblDatum.AutoSize = true;
-            lblDatum.Location = new Point(45, 69);
+            lblDatum.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblDatum.ForeColor = Color.FromArgb(80, 100, 120);
+            lblDatum.Location = new Point(29, 65);
             lblDatum.Name = "lblDatum";
-            lblDatum.Size = new Size(90, 20);
+            lblDatum.Size = new Size(117, 25);
             lblDatum.TabIndex = 1;
             lblDatum.Text = "Novi datum:";
             // 
             // lblTermin
             // 
             lblTermin.AutoSize = true;
-            lblTermin.Location = new Point(45, 142);
+            lblTermin.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTermin.ForeColor = Color.FromArgb(80, 100, 120);
+            lblTermin.Location = new Point(29, 138);
             lblTermin.Name = "lblTermin";
-            lblTermin.Size = new Size(90, 20);
+            lblTermin.Size = new Size(118, 25);
             lblTermin.TabIndex = 2;
             lblTermin.Text = "Novi termin:";
             // 
             // dtpDatum
             // 
+            dtpDatum.Font = new Font("Segoe UI", 10F);
             dtpDatum.Format = DateTimePickerFormat.Short;
             dtpDatum.Location = new Point(153, 64);
             dtpDatum.Name = "dtpDatum";
-            dtpDatum.Size = new Size(179, 27);
+            dtpDatum.Size = new Size(179, 30);
             dtpDatum.TabIndex = 3;
             dtpDatum.ValueChanged += dtpDatum_ValueChanged;
             // 
             // cmbTermin
             // 
+            cmbTermin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTermin.Font = new Font("Segoe UI", 10F);
+            cmbTermin.FormatString = "HH:mm";
             cmbTermin.FormattingEnabled = true;
             cmbTermin.Location = new Point(153, 139);
             cmbTermin.Name = "cmbTermin";
-            cmbTermin.Size = new Size(179, 28);
+            cmbTermin.Size = new Size(179, 31);
             cmbTermin.TabIndex = 4;
             // 
             // btnSacuvaj
             // 
-            btnSacuvaj.Location = new Point(125, 219);
+            btnSacuvaj.BackColor = Color.FromArgb(46, 134, 222);
+            btnSacuvaj.Cursor = Cursors.Hand;
+            btnSacuvaj.FlatAppearance.BorderSize = 0;
+            btnSacuvaj.FlatStyle = FlatStyle.Flat;
+            btnSacuvaj.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSacuvaj.ForeColor = Color.White;
+            btnSacuvaj.Location = new Point(111, 219);
             btnSacuvaj.Name = "btnSacuvaj";
-            btnSacuvaj.Size = new Size(109, 42);
+            btnSacuvaj.Size = new Size(130, 44);
             btnSacuvaj.TabIndex = 5;
             btnSacuvaj.Text = "💾 Sačuvaj";
-            btnSacuvaj.UseVisualStyleBackColor = true;
+            btnSacuvaj.UseVisualStyleBackColor = false;
             btnSacuvaj.Click += btnSacuvaj_Click;
             // 
             // FrmPromeniTermin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(244, 246, 249);
             ClientSize = new Size(382, 303);
             Controls.Add(btnSacuvaj);
             Controls.Add(cmbTermin);
