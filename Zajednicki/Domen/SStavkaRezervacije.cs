@@ -14,7 +14,7 @@ namespace Zajednicki.Domen
         public string Registracija { get; set; }
         public double Cena { get; set; }
         public TipVozila TipVozila { get; set; }
-
+        [JsonIgnore] public string NazivTipVozila => TipVozila?.Naziv ?? "";
         [JsonIgnore] public string TableName => "SStavkaRezervacije";
         [JsonIgnore]
         public string PrimaryKey =>
@@ -42,11 +42,22 @@ namespace Zajednicki.Domen
                     RbSStavka = (int)reader["rbSStavka"],
                     Registracija = (string)reader["registracija"],
                     Cena = Convert.ToDouble(reader["cena"]),
-                    TipVozila = new TipVozila { IdTipVozila = (int)reader["idTipVozila"] }
+                    TipVozila = new TipVozila { 
+                        IdTipVozila = (int)reader["idTipVozila"],
+                        Naziv = ReaderHasColumn(reader, "nazivTipVozila") ? (string)reader["nazivTipVozila"] : ""
+                    }
                 };
                 lista.Add(ss);
             }
             return lista;
+        }
+
+        private bool ReaderHasColumn(SqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+                if (reader.GetName(i) == columnName) return true;
+             
+            return false;
         }
     }
 }

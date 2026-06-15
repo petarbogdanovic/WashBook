@@ -12,6 +12,7 @@ namespace Zajednicki.Domen
         public int RbStavka { get; set; }
         public Usluga Usluga { get; set; }
         public List<SStavkaRezervacije> SStavke { get; set; } = new List<SStavkaRezervacije>();
+        [JsonIgnore] public string NazivUsluge => Usluga?.Naziv ?? "";
         [JsonIgnore] public string TableName => "StavkaRezervacije";
         [JsonIgnore] public string PrimaryKey => $"idRezervacija = {IdRezervacija} AND rbStavka = {RbStavka}";
         [JsonIgnore] public string Values => $"{IdRezervacija}, {RbStavka}, {Usluga.IdUsluga}";
@@ -26,12 +27,23 @@ namespace Zajednicki.Domen
                 {
                     IdRezervacija = (int)reader["idRezervacija"],
                     RbStavka = (int)reader["rbStavka"],
-                    Usluga = new Usluga { IdUsluga = (int)reader["idUsluga"] }
+                    Usluga = new Usluga { 
+                        IdUsluga = (int)reader["idUsluga"],
+                        Naziv = ReaderHasColumn(reader, "nazivUsluga") ? (string)reader["nazivUsluga"] : ""
+                    }
                 };
                 lista.Add(s);
             }
             return lista;
         }
-    
+
+        private bool ReaderHasColumn(SqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+                if (reader.GetName(i) == columnName) return true;
+
+            return false;
+
+        }
     }
 }

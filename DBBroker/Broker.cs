@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Transactions;
 using Zajednicki.Domen;
 
 namespace DBBroker
@@ -35,14 +36,15 @@ namespace DBBroker
         {
             connection.OpenConnection();
         }
-
-        public List<IEntity> GetAll(IEntity entity)
+      
+        public List<IEntity> Get(string cmdText, IEntity entity, params SqlParameter[] parameters)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = $"select * from {entity.TableName}";
-            using SqlDataReader reader = command.ExecuteReader();
-            List<IEntity> list = entity.GetReaderList(reader);
-            return list;
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = cmdText;
+            if (parameters != null && parameters.Length > 0)
+                cmd.Parameters.AddRange(parameters);
+            using SqlDataReader reader = cmd.ExecuteReader();
+            return entity.GetReaderList(reader);
         }
 
         public void Add(IEntity entity)
@@ -51,19 +53,6 @@ namespace DBBroker
             cmd.CommandText = $"insert into {entity.TableName} values ({entity.Values})";
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-        }
-
-        public IEntity Prijavi(IEntity entity, string korisnickoIme, string sifra)
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText =
-                $"SELECT * FROM {entity.TableName} WHERE korisnickoIme = '{korisnickoIme}' AND sifra = '{sifra}'";
-            using SqlDataReader reader = cmd.ExecuteReader();
-            List<IEntity> lista = entity.GetReaderList(reader);
-            if (lista.Count > 0)
-                return lista[0];
-
-            throw new Exception("Korisničko ime ili šifra nisu ispravni.");
         }
 
         public void Update(IEntity entity)
@@ -80,17 +69,6 @@ namespace DBBroker
             cmd.CommandText = $"delete from {entity.TableName} where {entity.PrimaryKey}";
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-        }
-
-        public IEntity GetById(IEntity entity)
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM {entity.TableName} WHERE {entity.PrimaryKey}";
-            using SqlDataReader reader = cmd.ExecuteReader();
-            List<IEntity> lista = entity.GetReaderList(reader);
-            if (lista.Count > 0)
-                return lista[0];
-            throw new Exception("Objekat nije pronađen.");
         }
 
         public IEntity GetRezervacija(int idRezervacija)
@@ -125,29 +103,29 @@ namespace DBBroker
             return termini;
         }
 
-        public List<IEntity> GetAllRezervacijeByCondition(string condition)
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $@"
-                        SELECT r.*,
-                               ra.ime as imeRadnika, ra.prezime as prezimeRadnika,
-                               k.ime as imeKorisnika, k.prezime as prezimeKorisnika,
-                               u.naziv AS usluga,
-                               tv.naziv AS tipVozila,
-                               ss.registracija,
-                               ss.cena
-                        FROM Rezervacija r
-                        JOIN Radnik ra ON r.idRadnik = ra.idRadnik
-                        JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
-                        LEFT JOIN StavkaRezervacije st ON r.idRezervacija = st.idRezervacija
-                        LEFT JOIN Usluga u ON u.idUsluga = st.idUsluga
-                        LEFT JOIN TipVozila tv ON tv.idTipVozila = u.idTipVozila
-                        LEFT JOIN SStavkaRezervacije ss ON ss.idRezervacija = st.idRezervacija
-                                                       AND st.rbStavka = ss.rbStavka
-                        WHERE {condition}";
-            using SqlDataReader reader = cmd.ExecuteReader();
-            return new Rezervacija().GetReaderList(reader);
-        }
+        //public List<IEntity> GetAllRezervacijeByCondition(string condition)
+        //{
+        //    SqlCommand cmd = connection.CreateCommand();
+        //    cmd.CommandText = $@"
+        //                SELECT r.*,
+        //                       ra.ime as imeRadnika, ra.prezime as prezimeRadnika,
+        //                       k.ime as imeKorisnika, k.prezime as prezimeKorisnika,
+        //                       u.naziv AS usluga,
+        //                       tv.naziv AS tipVozila,
+        //                       ss.registracija,
+        //                       ss.cena
+        //                FROM Rezervacija r
+        //                JOIN Radnik ra ON r.idRadnik = ra.idRadnik
+        //                JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
+        //                LEFT JOIN StavkaRezervacije st ON r.idRezervacija = st.idRezervacija
+        //                LEFT JOIN Usluga u ON u.idUsluga = st.idUsluga
+        //                LEFT JOIN TipVozila tv ON tv.idTipVozila = u.idTipVozila
+        //                LEFT JOIN SStavkaRezervacije ss ON ss.idRezervacija = st.idRezervacija
+        //                                               AND st.rbStavka = ss.rbStavka
+        //                WHERE {condition}";
+        //    using SqlDataReader reader = cmd.ExecuteReader();
+        //    return new Rezervacija().GetReaderList(reader);
+        //}
 
         public int GetLastInsertedId(string tableName, string idColumn)
         {
@@ -155,14 +133,25 @@ namespace DBBroker
             cmd.CommandText = $"SELECT MAX({idColumn}) FROM {tableName}";
             return (int)cmd.ExecuteScalar();
         }
-        public List<IEntity> GetAllByCondition(IEntity entity, string condition)
+
+        public IEntity GetById(IEntity entity)
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM {entity.TableName} WHERE {condition}";
+            cmd.CommandText = $"SELECT * FROM {entity.TableName} WHERE {entity.PrimaryKey}";
             using SqlDataReader reader = cmd.ExecuteReader();
-            return entity.GetReaderList(reader);
+            List<IEntity> lista = entity.GetReaderList(reader);
+            if (lista.Count > 0)
+                return lista[0];
+            throw new Exception("Objekat nije pronađen.");
         }
 
-        
+
+        //public List<IEntity> GetAllByCondition(IEntity entity, string condition)
+        //{
+        //    SqlCommand cmd = connection.CreateCommand();
+        //    cmd.CommandText = $"SELECT * FROM {entity.TableName} WHERE {condition}";
+        //    using SqlDataReader reader = cmd.ExecuteReader();
+        //    return entity.GetReaderList(reader);
+        //}
     }
 }

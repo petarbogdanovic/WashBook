@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DBBroker;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
@@ -19,7 +21,16 @@ namespace Sistemske_operacije
 
         protected override void ExecuteConcreteOperation()
         {
-            Result = (Radnik)broker.Prijavi(new Radnik(), korisnickoIme, sifra);
+
+            string cmdText = "SELECT * FROM Radnik WHERE KorisnickoIme=@kime AND Sifra=@sifra";
+
+            List<IEntity> lista = broker.Get(cmdText, new Radnik(),
+                new SqlParameter("@kime", korisnickoIme),
+                new SqlParameter("@sifra", sifra));
+
+            Result = lista.Cast<Radnik>().FirstOrDefault() 
+                ?? throw new Exception("Korisničko ime ili šifra nisu ispravni.");
+
         }
     }
 }

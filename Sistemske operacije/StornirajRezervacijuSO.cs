@@ -16,7 +16,7 @@ namespace Sistemske_operacije
 
         protected override void ExecuteConcreteOperation()
         {
-            Rezervacija rezervacija = (Rezervacija)broker.GetRezervacija(idRezervacije);
+            Rezervacija rezervacija = (Rezervacija)broker.GetById(new Rezervacija { IdRezervacija = idRezervacije });
 
 
             if (rezervacija.StatusRezervacije != StatusRezervacije.KREIRANA)

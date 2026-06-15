@@ -17,6 +17,7 @@ namespace Sistemske_operacije
         protected override void ExecuteConcreteOperation()
         {
             broker.Update(rezervacija);
+
         }
     }
 }

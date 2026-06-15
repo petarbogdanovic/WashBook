@@ -10,7 +10,7 @@ namespace Sistemske_operacije
         public List<TipVozila> Result { get; set; }
         protected override void ExecuteConcreteOperation()
         {
-            Result = broker.GetAll(new TipVozila()).Cast<TipVozila>().ToList();
+            Result = broker.Get("SELECT * FROM TipVozila", new TipVozila()).Cast<TipVozila>().ToList();
         }
     }
 }

@@ -17,11 +17,16 @@ namespace Sistemske_operacije
 
         protected override void ExecuteConcreteOperation()
         {
-            //Result = broker.GetAllByCondition(new Rezervacija(), condition)
-            //              .Cast<Rezervacija>().ToList();
+            string cmdText = $@"
+                        SELECT r.*,
+                               ra.ime as imeRadnika, ra.prezime as prezimeRadnika,
+                               k.ime as imeKorisnika, k.prezime as prezimeKorisnika,
+                        FROM Rezervacija r
+                        JOIN Radnik ra ON r.idRadnik = ra.idRadnik
+                        JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
+                        WHERE {condition}";
 
-            Result = broker.GetAllRezervacijeByCondition(condition)
-               .Cast<Rezervacija>().ToList();
+            Result = broker.Get(cmdText, new Rezervacija()).Cast<Rezervacija>().ToList();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Sistemske_operacije
         public List<Usluga> Result { get; set; }
         protected override void ExecuteConcreteOperation()
         {
-            Result = broker.GetAll(new Usluga()).Cast<Usluga>().ToList();
+            Result = broker.Get("SELECT * FROM Usluga", new Usluga()).Cast<Usluga>().ToList();
         }
     }
 }

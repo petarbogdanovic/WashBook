@@ -10,7 +10,7 @@ namespace Sistemske_operacije
         public List<Korisnik> Result { get; set; }
         protected override void ExecuteConcreteOperation()
         {
-            Result = broker.GetAll(new Korisnik()).Cast<Korisnik>().ToList();
+            Result = broker.Get("SELECT * FROM Korisnik", new Korisnik()).Cast<Korisnik>().ToList();
         }
     }
 }

@@ -15,10 +15,10 @@ namespace Zajednicki.Domen
         public Radnik Radnik { get; set; }
         public Korisnik Korisnik { get; set; }
         public List<StavkaRezervacije> Stavke { get; set; } = new List<StavkaRezervacije>();
-        public string NazivUsluge { get; set; }
-        public string NazivTipVozila { get; set; }
-        public string Registracija { get; set; }
-        public double Cena { get; set; }
+        //public string NazivUsluge { get; set; }
+        //public string NazivTipVozila { get; set; }
+        //public string Registracija { get; set; }
+        //public double Cena { get; set; }
 
         [JsonIgnore] public string ImeRadnika => $"{Radnik?.Ime} {Radnik?.Prezime}".Trim();
         [JsonIgnore] public string ImeKorisnika => $"{Korisnik?.Ime} {Korisnik?.Prezime}".Trim();
@@ -61,10 +61,10 @@ namespace Zajednicki.Domen
                         Ime = ReaderHasColumn(reader, "imeKorisnika") ? (string)reader["imeKorisnika"] : "",
                         Prezime = ReaderHasColumn(reader, "prezimeKorisnika") ? (string)reader["prezimeKorisnika"] : ""
                     },
-                    NazivTipVozila = ReaderHasColumn(reader, "tipVozila") && reader["tipVozila"] != DBNull.Value ? (string)reader["tipVozila"] : "",
-                    NazivUsluge = ReaderHasColumn(reader, "usluga") && reader["usluga"] != DBNull.Value ? (string)reader["usluga"] : "",
-                    Registracija = ReaderHasColumn(reader, "registracija") && reader["registracija"] != DBNull.Value ? (string)reader["registracija"] : "",
-                    Cena = ReaderHasColumn(reader, "cena") && reader["cena"] != DBNull.Value ? Convert.ToDouble(reader["cena"]) : 0
+                    //NazivTipVozila = ReaderHasColumn(reader, "tipVozila") && reader["tipVozila"] != DBNull.Value ? (string)reader["tipVozila"] : "",
+                    //NazivUsluge = ReaderHasColumn(reader, "usluga") && reader["usluga"] != DBNull.Value ? (string)reader["usluga"] : "",
+                    //Registracija = ReaderHasColumn(reader, "registracija") && reader["registracija"] != DBNull.Value ? (string)reader["registracija"] : "",
+                    //Cena = ReaderHasColumn(reader, "cena") && reader["cena"] != DBNull.Value ? Convert.ToDouble(reader["cena"]) : 0
                 };
                 lista.Add(r);
             }
