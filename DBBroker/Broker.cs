@@ -43,6 +43,7 @@ namespace DBBroker
             cmd.CommandText = cmdText;
             if (parameters != null && parameters.Length > 0)
                 cmd.Parameters.AddRange(parameters);
+            Console.WriteLine(cmdText);   
             using SqlDataReader reader = cmd.ExecuteReader();
             return entity.GetReaderList(reader);
         }
@@ -71,62 +72,6 @@ namespace DBBroker
             cmd.Dispose();
         }
 
-        public IEntity GetRezervacija(int idRezervacija)
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $@"
-                   SELECT r.*, 
-                   ra.ime as imeRadnika, ra.prezime as prezimeRadnika,
-                   k.ime as imeKorisnika, k.prezime as prezimeKorisnika
-                   FROM Rezervacija r
-                   JOIN Radnik ra ON r.idRadnik = ra.idRadnik
-                   JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
-                   WHERE r.idRezervacija = {idRezervacija}";
-            using SqlDataReader reader = cmd.ExecuteReader();
-            List<IEntity> lista = new Rezervacija().GetReaderList(reader);
-            if (lista.Count > 0)
-                return lista[0];
-            throw new Exception("Rezervacija nije pronađena.");
-        }
-
-        public List<DateTime> GetZauzetiTermini(DateTime datum)
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $@"
-                SELECT termin FROM Rezervacija 
-                WHERE CAST(termin AS DATE) = '{datum:yyyy-MM-dd}'
-                AND statusRezervacije != 'STORNIRANA'";
-            using SqlDataReader reader = cmd.ExecuteReader();
-            List<DateTime> termini = new List<DateTime>();
-            while (reader.Read())
-                termini.Add((DateTime)reader["termin"]);
-            return termini;
-        }
-
-        //public List<IEntity> GetAllRezervacijeByCondition(string condition)
-        //{
-        //    SqlCommand cmd = connection.CreateCommand();
-        //    cmd.CommandText = $@"
-        //                SELECT r.*,
-        //                       ra.ime as imeRadnika, ra.prezime as prezimeRadnika,
-        //                       k.ime as imeKorisnika, k.prezime as prezimeKorisnika,
-        //                       u.naziv AS usluga,
-        //                       tv.naziv AS tipVozila,
-        //                       ss.registracija,
-        //                       ss.cena
-        //                FROM Rezervacija r
-        //                JOIN Radnik ra ON r.idRadnik = ra.idRadnik
-        //                JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
-        //                LEFT JOIN StavkaRezervacije st ON r.idRezervacija = st.idRezervacija
-        //                LEFT JOIN Usluga u ON u.idUsluga = st.idUsluga
-        //                LEFT JOIN TipVozila tv ON tv.idTipVozila = u.idTipVozila
-        //                LEFT JOIN SStavkaRezervacije ss ON ss.idRezervacija = st.idRezervacija
-        //                                               AND st.rbStavka = ss.rbStavka
-        //                WHERE {condition}";
-        //    using SqlDataReader reader = cmd.ExecuteReader();
-        //    return new Rezervacija().GetReaderList(reader);
-        //}
-
         public int GetLastInsertedId(string tableName, string idColumn)
         {
             SqlCommand cmd = connection.CreateCommand();
@@ -146,12 +91,6 @@ namespace DBBroker
         }
 
 
-        //public List<IEntity> GetAllByCondition(IEntity entity, string condition)
-        //{
-        //    SqlCommand cmd = connection.CreateCommand();
-        //    cmd.CommandText = $"SELECT * FROM {entity.TableName} WHERE {condition}";
-        //    using SqlDataReader reader = cmd.ExecuteReader();
-        //    return entity.GetReaderList(reader);
-        //}
+     
     }
 }

@@ -32,7 +32,6 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pnlHeader = new Panel();
-            btnStorniraj = new Button();
             btnRefresh = new Button();
             lblNaslov = new Label();
             dgvRezervacije = new DataGridView();
@@ -42,7 +41,6 @@
             // 
             // pnlHeader
             // 
-            pnlHeader.Controls.Add(btnStorniraj);
             pnlHeader.Controls.Add(btnRefresh);
             pnlHeader.Controls.Add(lblNaslov);
             pnlHeader.Dock = DockStyle.Top;
@@ -51,16 +49,6 @@
             pnlHeader.Padding = new Padding(20, 0, 20, 0);
             pnlHeader.Size = new Size(833, 60);
             pnlHeader.TabIndex = 0;
-            // 
-            // btnStorniraj
-            // 
-            btnStorniraj.Dock = DockStyle.Right;
-            btnStorniraj.Location = new Point(619, 0);
-            btnStorniraj.Name = "btnStorniraj";
-            btnStorniraj.Size = new Size(94, 60);
-            btnStorniraj.TabIndex = 2;
-            btnStorniraj.Text = "❌Storniraj";
-            btnStorniraj.UseVisualStyleBackColor = true;
             // 
             // btnRefresh
             // 
@@ -149,6 +137,5 @@
         public Label lblNaslov;
         public Button btnRefresh;
         public DataGridView dgvRezervacije;
-        public Button btnStorniraj;
     }
 }

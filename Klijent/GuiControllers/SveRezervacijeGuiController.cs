@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.forme;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -49,8 +50,13 @@ namespace Klijent.GuiControllers
         {
             try
             {
+                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
+                {
+                    IdPerionica = MainCoordinator.Instanca.PrijavljenaRadnikPerionica.IdPerionica
+
+                };
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiListuRezervacija, "1=1");
+                    Operacija.VratiListuRezervacija, kriterijum);
 
                 if (!odgovor.Uspesno)
                 {
@@ -83,16 +89,16 @@ namespace Klijent.GuiControllers
             // Prikaži samo relevantne
             string[] vidljive = {  "DatumRezervacije",
                                    "Termin", "ImeKorisnika",
-                                   "StatusRezervacije","NazivTipVozila",
-                                    "NazivUsluge","Registracija", "Cena" };
+                                   "StatusRezervacije", "Registracija" };
 
             foreach (string ime in vidljive)
             {
                 if (uc.dgvRezervacije.Columns.Contains(ime))
-                {
                     uc.dgvRezervacije.Columns[ime].Visible = true;
-                }
+                
             }
+
+            
 
             if (uc.dgvRezervacije.Columns.Contains("Termin"))
             {
@@ -110,14 +116,8 @@ namespace Klijent.GuiControllers
             }
             if (uc.dgvRezervacije.Columns.Contains("StatusRezervacije"))
                 uc.dgvRezervacije.Columns["StatusRezervacije"].HeaderText = "Status";
-            if (uc.dgvRezervacije.Columns.Contains("NazivTipVozila"))
-                uc.dgvRezervacije.Columns["NazivTipVozila"].HeaderText = "Tip vozila";
-            if (uc.dgvRezervacije.Columns.Contains("NazivUsluge"))
-                uc.dgvRezervacije.Columns["NazivUsluge"].HeaderText = "Usluga";
             if (uc.dgvRezervacije.Columns.Contains("Registracija"))
-                uc.dgvRezervacije.Columns["Registracija"].HeaderText = "Registracija";
-            if (uc.dgvRezervacije.Columns.Contains("Cena"))
-                uc.dgvRezervacije.Columns["Cena"].HeaderText = "Cena";
+                uc.dgvRezervacije.Columns["Registracija"].HeaderText = "Registracija";  
         }
 
         private void DgvRezervacije_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -126,16 +126,7 @@ namespace Klijent.GuiControllers
 
             Rezervacija izabrana = (Rezervacija)uc.dgvRezervacije.Rows[e.RowIndex].DataBoundItem;
 
-            if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
-            {
-                FrmPromeniStatus frm = new FrmPromeniStatus(izabrana);
-                frm.ShowDialog();
-            }
-            else
-            {
-                FrmPromeniTermin frm = new FrmPromeniTermin(izabrana);
-                frm.ShowDialog();
-            }
+            new FrmDetaljiRezervacije(izabrana).ShowDialog();
 
             UcitajRezervacije();
         }

@@ -80,8 +80,8 @@ namespace Server
                         }
                     case Operacija.VratiZauzeteTermine:
                         {
-                            DateTime datum = serializer.ReadType<DateTime>(zahtev.Objekat);
-                            List<DateTime> result = Kontroler.Instance.VratiZauzetTermine(datum);
+                            RezervacijaKriterijum kriterijum = serializer.ReadType<RezervacijaKriterijum>(zahtev.Objekat);
+                            var result = Kontroler.Instance.VratiZauzetTermine(kriterijum);
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.VratiSveRadnike:
@@ -92,11 +92,6 @@ namespace Server
                     case Operacija.VratiSveUsluge:
                         {
                             var result = Kontroler.Instance.VratiSveUsluge();
-                            return new Odgovor { Uspesno = true, Objekat = result };
-                        }
-                    case Operacija.VratiSveTipoveVozila:
-                        {
-                            var result = Kontroler.Instance.VratiSveTipoveVozila();
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.KreirajRezervaciju:
@@ -130,8 +125,8 @@ namespace Server
                         }
                     case Operacija.VratiListuRezervacija:
                         {
-                            string condition = serializer.ReadType<string>(zahtev.Objekat);
-                            var result = Kontroler.Instance.VratiListuRezervacija(condition);
+                            RezervacijaKriterijum kriterijum = serializer.ReadType<RezervacijaKriterijum>(zahtev.Objekat);
+                            var result = Kontroler.Instance.VratiListuRezervacija(kriterijum);
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.VratiSveKorisnike:
@@ -139,11 +134,17 @@ namespace Server
                             var result = Kontroler.Instance.VratiSveKorisnike();
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
-                        case Operacija.StornirajRezervaciju:
+                    case Operacija.StornirajRezervaciju:
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
                             Kontroler.Instance.StornirajRezervaciju(r.IdRezervacija);
                             return new Odgovor { Uspesno = true };
+                        }
+                    case Operacija.VratiPerionicaZaRadnika:
+                        {
+                            int idRadnik = serializer.ReadType<int>(zahtev.Objekat);
+                            var result = Kontroler.Instance.VratiPerionicaZaRadnika(idRadnik);
+                            return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     default:
                         return new Odgovor { Uspesno = false, Greska = "Nepoznata operacija." };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.forme;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -30,7 +31,6 @@ namespace Klijent.GuiControllers
 
             // Vezivanje event handlera
             uc.btnRefresh.Click += BtnRefresh_Click;
-            uc.btnStorniraj.Click += BtnStorniraj_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 
             // Inicijalno učitavanje
@@ -53,15 +53,18 @@ namespace Klijent.GuiControllers
         {
             try
             {
-                string condition;
+                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
+                {
+                    IdKorisnik = MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik
+                };
 
-                if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
-                    condition = $"r.idRadnik = {MainCoordinator.Instanca.PrijavljeniRadnik.IdRadnik}";
-                else
-                    condition = $"r.idKorisnik = {MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik}";
+                //if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
+                //    kriterijum = $"r.idRadnik = {MainCoordinator.Instanca.PrijavljeniRadnik.IdRadnik}";
+                //else
+                //    kriterijum = $"r.idKorisnik = {MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik}";
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiListuRezervacija, condition);
+                    Operacija.VratiListuRezervacija, kriterijum);
 
                 if (!odgovor.Uspesno)
                 {
@@ -90,7 +93,7 @@ namespace Klijent.GuiControllers
             foreach (DataGridViewColumn col in uc.dgvRezervacije.Columns)
                 col.Visible = false;
 
-            string[] vidljive = { "Termin", "ImeRadnika", "StatusRezervacije", "NazivTipVozila", "NazivUsluge", "Registracija", "Cena" };
+            string[] vidljive = { "Termin", "ImeRadnika", "StatusRezervacije", "Registracija" };
             foreach (string ime in vidljive)
                 if (uc.dgvRezervacije.Columns.Contains(ime))
                     uc.dgvRezervacije.Columns[ime].Visible = true;
@@ -106,14 +109,8 @@ namespace Klijent.GuiControllers
                 uc.dgvRezervacije.Columns["ImeRadnika"].HeaderText = "Radnik";
             if (uc.dgvRezervacije.Columns.Contains("StatusRezervacije"))
                 uc.dgvRezervacije.Columns["StatusRezervacije"].HeaderText = "Status";
-            if (uc.dgvRezervacije.Columns.Contains("NazivTipVozila"))
-                uc.dgvRezervacije.Columns["NazivTipVozila"].HeaderText = "Tip vozila";
-            if (uc.dgvRezervacije.Columns.Contains("NazivUsluge"))
-                uc.dgvRezervacije.Columns["NazivUsluge"].HeaderText = "Usluga";
             if (uc.dgvRezervacije.Columns.Contains("Registracija"))
                 uc.dgvRezervacije.Columns["Registracija"].HeaderText = "Registracija";
-            if (uc.dgvRezervacije.Columns.Contains("Cena"))
-                uc.dgvRezervacije.Columns["Cena"].HeaderText = "Cena (RSD)";
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -127,72 +124,63 @@ namespace Klijent.GuiControllers
 
             Rezervacija izabrana = (Rezervacija)uc.dgvRezervacije.Rows[e.RowIndex].DataBoundItem;
 
-            if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
-            {
-                FrmPromeniStatus frm = new FrmPromeniStatus(izabrana);
-                frm.ShowDialog();
-            }
-            else
-            {
-                FrmPromeniTermin frm = new FrmPromeniTermin(izabrana);
-                frm.ShowDialog();
-            }
+            new FrmDetaljiRezervacije(izabrana).ShowDialog();
 
             UcitajRezervacije();
         }
 
-        private void BtnStorniraj_Click(object sender, EventArgs e)
-        {
-            if (uc.dgvRezervacije.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Molimo odaberite rezervaciju.", "Upozorenje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+        //private void BtnStorniraj_Click(object sender, EventArgs e)
+        //{
+        //    if (uc.dgvRezervacije.SelectedRows.Count == 0)
+        //    {
+        //        MessageBox.Show("Molimo odaberite rezervaciju.", "Upozorenje",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        return;
+        //    }
 
-            Rezervacija selected = (Rezervacija)uc.dgvRezervacije.SelectedRows[0].DataBoundItem;
+        //    Rezervacija selected = (Rezervacija)uc.dgvRezervacije.SelectedRows[0].DataBoundItem;
 
-            if (selected.StatusRezervacije != StatusRezervacije.KREIRANA)
-            {
-                MessageBox.Show("Moguće je stornirati samo rezervacije u statusu KREIRANA.",
-                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+        //    if (selected.StatusRezervacije != StatusRezervacije.KREIRANA)
+        //    {
+        //        MessageBox.Show("Moguće je stornirati samo rezervacije u statusu KREIRANA.",
+        //            "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        return;
+        //    }
 
-            if (selected.Termin <= DateTime.Now)
-            {
-                MessageBox.Show("Nije moguće stornirati rezervaciju čiji je termin već prošao.",
-                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+        //    if (selected.Termin <= DateTime.Now)
+        //    {
+        //        MessageBox.Show("Nije moguće stornirati rezervaciju čiji je termin već prošao.",
+        //            "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        return;
+        //    }
 
-            var potvrda = MessageBox.Show(
-                $"Da li ste sigurni da želite da stornirate rezervaciju #{selected.IdRezervacija}?",
-                "Potvrda", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        //    var potvrda = MessageBox.Show(
+        //        $"Da li ste sigurni da želite da stornirate rezervaciju #{selected.IdRezervacija}?",
+        //        "Potvrda", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (potvrda != DialogResult.Yes) return;
+        //    if (potvrda != DialogResult.Yes) return;
 
-            try
-            {
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.StornirajRezervaciju, selected);
+        //    try
+        //    {
+        //        Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
+        //            Operacija.StornirajRezervaciju, selected);
 
-                if (odgovor.Uspesno)
-                {
-                    MessageBox.Show("Rezervacija je uspešno stornirana.", "Uspeh",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    UcitajRezervacije();
-                }
-                else
-                {
-                    MessageBox.Show(odgovor.Greska, "Greška",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //        if (odgovor.Uspesno)
+        //        {
+        //            MessageBox.Show("Rezervacija je uspešno stornirana.", "Uspeh",
+        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //            UcitajRezervacije();
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show(odgovor.Greska, "Greška",
+        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
     }
 }

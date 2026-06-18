@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -16,6 +17,18 @@ namespace Zajednicki.Domen
         public DateTime DatumRodjenja { get; set; }
         public string Adresa { get; set; }
         public string Telefon { get; set; }
+        public Perionica Perionica { get; set; }
+        public int? Smena { get; set; }
+
+        [JsonIgnore] public string ImePrezimePerionica
+        {
+            get
+            {
+                if (Perionica == null) return ImePrezime;
+                string smenaDeo = Smena.HasValue ? $" (Smena: {Smena.Value})" : "";
+                return $"{Ime} {Prezime} | {Perionica.Naziv}{smenaDeo}";   
+            }
+        }
         [JsonIgnore] public string PrimaryKey => $"idRadnik = {IdRadnik}";
         [JsonIgnore]
         public string UpdateValues =>
@@ -46,10 +59,34 @@ namespace Zajednicki.Domen
                     Adresa = (string)reader["adresa"],
                     Telefon = (string)reader["telefon"]
                 };
+
+                if (ReaderHasColumn(reader, "nazivPerionica") && reader["nazivPerionica"] != DBNull.Value)
+                {
+                    r.Perionica = new Perionica
+                    {
+                        IdPerionica = ReaderHasColumn(reader, "idPerionica") && reader["idPerionica"] != DBNull.Value
+                            ? (int)reader["idPerionica"] : 0,
+                        Naziv = (string)reader["nazivPerionica"],
+                        Adresa = ReaderHasColumn(reader, "adresaPerionica") && reader["adresaPerionica"] != DBNull.Value
+                            ? (string)reader["adresaPerionica"] : ""
+                    };
+                    if (ReaderHasColumn(reader, "smena") && reader["smena"] != DBNull.Value)
+                        r.Smena = (int)reader["smena"];
+                }
+
                 lista.Add(r);
             }
             return lista;
         }
+
+        private bool ReaderHasColumn(SqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+                if (reader.GetName(i) == columnName)
+                    return true;
+            return false;
+        }
+
         public override string ToString() => ImePrezime;
         public override bool Equals(object? obj) => obj is Radnik r && r.IdRadnik == IdRadnik;
         public override int GetHashCode() => IdRadnik.GetHashCode();

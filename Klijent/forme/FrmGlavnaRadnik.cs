@@ -27,10 +27,19 @@ namespace Klijent
         {
             Radnik r = MainCoordinator.Instanca.PrijavljeniRadnik;
             lblKorisnik.Text = $"{r.Ime} {r.Prezime}";
+            PrikaziPerionicu(r);
             PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
             PostaviAktivnoDugme(btnSveRezervacije);
         }
 
+        private void PrikaziPerionicu(Radnik r)
+        {
+            RadnikPerionica rp = MainCoordinator.Instanca.PrijavljenaRadnikPerionica;
+            if (rp != null)
+            {
+                lblKorisnik.Text = $"{r.Ime} {r.Prezime} | {rp.NazivPerionica} (smena {rp.Smena})";
+            }
+        }
 
         private void PostaviAktivnoDugme(Button btn)
         {

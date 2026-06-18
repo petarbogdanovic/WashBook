@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
+using Zajednicki.Komunikacija;
 
 namespace Server
 {
@@ -42,15 +43,10 @@ namespace Server
             return so.Result;
         }
 
-        public List<TipVozila> VratiSveTipoveVozila()
+      
+        public List<DateTime> VratiZauzetTermine(RezervacijaKriterijum kriterijum)
         {
-            VratiSveTipoveVozilaSO so = new VratiSveTipoveVozilaSO();
-            so.ExecuteTemplate();
-            return so.Result;
-        }
-        public List<DateTime> VratiZauzetTermine(DateTime datum)
-        {
-            VratiZauzetTermineSO so = new VratiZauzetTermineSO(datum);
+            VratiZauzetTermineSO so = new VratiZauzetTermineSO(kriterijum);
             so.ExecuteTemplate();
             return so.Result;
         }
@@ -92,12 +88,11 @@ namespace Server
             return so.Result;
         }
 
-        public List<Rezervacija> VratiListuRezervacija(string uslov)
+        public List<Rezervacija> VratiListuRezervacija(RezervacijaKriterijum kriterijum)
         {
-            VratiListuRezervacijaSO so = new VratiListuRezervacijaSO(uslov);
+            VratiListuRezervacijaSO so = new VratiListuRezervacijaSO(kriterijum);
             so.ExecuteTemplate();
             return so.Result;
-
         }
 
         public List<Korisnik> VratiSveKorisnike()
@@ -105,6 +100,13 @@ namespace Server
             VratiSveKorisnikeSO so = new VratiSveKorisnikeSO();
             so.ExecuteTemplate();
             return so.Result.Cast<Korisnik>().ToList();
+        }
+
+        public List<RadnikPerionica> VratiPerionicaZaRadnika(int idRadnik)
+        {
+            VratiPerionicuZaRadnikaSO so = new VratiPerionicuZaRadnikaSO(idRadnik);
+            so.ExecuteTemplate();
+            return so.Result;
         }
     }
 }

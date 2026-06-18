@@ -49,7 +49,7 @@
             pnlSidebar.Dock = DockStyle.Left;
             pnlSidebar.Location = new Point(0, 0);
             pnlSidebar.Name = "pnlSidebar";
-            pnlSidebar.Size = new Size(220, 603);
+            pnlSidebar.Size = new Size(238, 653);
             pnlSidebar.TabIndex = 0;
             // 
             // btnOdjava
@@ -66,7 +66,7 @@
             btnOdjava.Location = new Point(0, 177);
             btnOdjava.Name = "btnOdjava";
             btnOdjava.Padding = new Padding(20, 0, 0, 0);
-            btnOdjava.Size = new Size(220, 48);
+            btnOdjava.Size = new Size(238, 48);
             btnOdjava.TabIndex = 4;
             btnOdjava.Text = "🚪  Odjava";
             btnOdjava.TextAlign = ContentAlignment.MiddleLeft;
@@ -87,7 +87,7 @@
             btnNovaRezervacija.Location = new Point(0, 129);
             btnNovaRezervacija.Name = "btnNovaRezervacija";
             btnNovaRezervacija.Padding = new Padding(20, 0, 0, 0);
-            btnNovaRezervacija.Size = new Size(220, 48);
+            btnNovaRezervacija.Size = new Size(238, 48);
             btnNovaRezervacija.TabIndex = 3;
             btnNovaRezervacija.Text = "➕  Nova rezervacija";
             btnNovaRezervacija.TextAlign = ContentAlignment.MiddleLeft;
@@ -108,7 +108,7 @@
             btnMojeRezervacije.Location = new Point(0, 81);
             btnMojeRezervacije.Name = "btnMojeRezervacije";
             btnMojeRezervacije.Padding = new Padding(20, 0, 0, 0);
-            btnMojeRezervacije.Size = new Size(220, 48);
+            btnMojeRezervacije.Size = new Size(238, 48);
             btnMojeRezervacije.TabIndex = 2;
             btnMojeRezervacije.Text = "📋  Moje rezervacije";
             btnMojeRezervacije.TextAlign = ContentAlignment.MiddleLeft;
@@ -144,10 +144,10 @@
             // pnlSadrzaj
             // 
             pnlSadrzaj.Dock = DockStyle.Fill;
-            pnlSadrzaj.Location = new Point(220, 0);
+            pnlSadrzaj.Location = new Point(238, 0);
             pnlSadrzaj.Name = "pnlSadrzaj";
             pnlSadrzaj.Padding = new Padding(20);
-            pnlSadrzaj.Size = new Size(862, 603);
+            pnlSadrzaj.Size = new Size(1046, 653);
             pnlSadrzaj.TabIndex = 1;
             // 
             // FrmGlavnaKorisnik
@@ -155,7 +155,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(244, 246, 249);
-            ClientSize = new Size(1082, 603);
+            ClientSize = new Size(1284, 653);
             Controls.Add(pnlSadrzaj);
             Controls.Add(pnlSidebar);
             MinimumSize = new Size(1100, 650);

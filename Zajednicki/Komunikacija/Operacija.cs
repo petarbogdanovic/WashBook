@@ -26,7 +26,10 @@ namespace Zajednicki.Komunikacija
 
 
         // Ostalo
-        VratiSveTipoveVozila,
-        VratiSveUsluge
+        VratiSveUsluge,
+
+        //Perionica
+        VratiPerionicaZaRadnika
+
     }
 }

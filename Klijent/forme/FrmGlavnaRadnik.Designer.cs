@@ -54,7 +54,7 @@
             pnlSidebar.Margin = new Padding(0);
             pnlSidebar.Name = "pnlSidebar";
             pnlSidebar.Padding = new Padding(10, 0, 10, 0);
-            pnlSidebar.Size = new Size(220, 603);
+            pnlSidebar.Size = new Size(329, 670);
             pnlSidebar.TabIndex = 0;
             // 
             // btnOdjava
@@ -71,7 +71,7 @@
             btnOdjava.Location = new Point(10, 222);
             btnOdjava.Name = "btnOdjava";
             btnOdjava.Padding = new Padding(20, 0, 0, 0);
-            btnOdjava.Size = new Size(200, 48);
+            btnOdjava.Size = new Size(309, 48);
             btnOdjava.TabIndex = 4;
             btnOdjava.Text = "🚪  Odjava";
             btnOdjava.TextAlign = ContentAlignment.MiddleLeft;
@@ -92,7 +92,7 @@
             btnPretraga.Location = new Point(10, 174);
             btnPretraga.Name = "btnPretraga";
             btnPretraga.Padding = new Padding(20, 0, 0, 0);
-            btnPretraga.Size = new Size(200, 48);
+            btnPretraga.Size = new Size(309, 48);
             btnPretraga.TabIndex = 3;
             btnPretraga.Text = "🔍  Pretraga";
             btnPretraga.TextAlign = ContentAlignment.MiddleLeft;
@@ -113,7 +113,7 @@
             btnNovaRezervacija.Location = new Point(10, 126);
             btnNovaRezervacija.Name = "btnNovaRezervacija";
             btnNovaRezervacija.Padding = new Padding(20, 0, 0, 0);
-            btnNovaRezervacija.Size = new Size(200, 48);
+            btnNovaRezervacija.Size = new Size(309, 48);
             btnNovaRezervacija.TabIndex = 2;
             btnNovaRezervacija.Text = "➕  Nova rezervacija";
             btnNovaRezervacija.TextAlign = ContentAlignment.MiddleLeft;
@@ -134,7 +134,7 @@
             btnSveRezervacije.Location = new Point(10, 78);
             btnSveRezervacije.Name = "btnSveRezervacije";
             btnSveRezervacije.Padding = new Padding(20, 0, 0, 0);
-            btnSveRezervacije.Size = new Size(200, 48);
+            btnSveRezervacije.Size = new Size(309, 48);
             btnSveRezervacije.TabIndex = 2;
             btnSveRezervacije.Text = "📋  Sve rezervacije";
             btnSveRezervacije.TextAlign = ContentAlignment.MiddleLeft;
@@ -170,10 +170,10 @@
             // pnlSadrzaj
             // 
             pnlSadrzaj.Dock = DockStyle.Fill;
-            pnlSadrzaj.Location = new Point(220, 0);
+            pnlSadrzaj.Location = new Point(329, 0);
             pnlSadrzaj.Name = "pnlSadrzaj";
             pnlSadrzaj.Padding = new Padding(20);
-            pnlSadrzaj.Size = new Size(862, 603);
+            pnlSadrzaj.Size = new Size(953, 670);
             pnlSadrzaj.TabIndex = 1;
             // 
             // FrmGlavnaRadnik
@@ -181,7 +181,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(244, 246, 249);
-            ClientSize = new Size(1082, 603);
+            ClientSize = new Size(1282, 670);
             Controls.Add(pnlSadrzaj);
             Controls.Add(pnlSidebar);
             MinimumSize = new Size(1100, 650);

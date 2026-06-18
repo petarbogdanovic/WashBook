@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using Zajednicki.Domen;
@@ -10,7 +10,6 @@ namespace Klijent.GuiControllers
 {
     public class NovaRezGuiController
     {
-        // Singleton
         private static NovaRezGuiController instance;
         public static NovaRezGuiController Instance
         {
@@ -25,36 +24,34 @@ namespace Klijent.GuiControllers
         private UCNovaRez ucNovaRez;
         private List<DateTime> slobodniTermini = new List<DateTime>();
         private Rezervacija novaRezervacija;
+        private BindingList<StavkaRezervacije> stavke = new BindingList<StavkaRezervacije>();
 
         public Control CreateUC()
         {
             ucNovaRez = new UCNovaRez();
-           
+
             SrediFormu();
 
-            // Vezivanje event handlera
-            ucNovaRez.btnSacuvaj.Click += BtnSacuvaj_Click;
+            ucNovaRez.btnRezervisi.Click += BtnRezervisi_Click;
+            ucNovaRez.btnDodajStavku.Click += BtnDodajStavku_Click;
             ucNovaRez.dtpDatum.ValueChanged += DtpDatum_ValueChanged;
-            ucNovaRez.cmbTipVozila.SelectedIndexChanged += CmbTipVozila_SelectedIndexChanged;
             ucNovaRez.cmbUsluga.SelectedIndexChanged += CmbUsluga_SelectedIndexChanged;
+            
+             ucNovaRez.btnObrisiStavku.Click += BtnObrisiStavku_Click;
+
+            ucNovaRez.dgvStavke.AutoGenerateColumns = false;
+            ucNovaRez.dgvStavke.DataSource = stavke;
 
             return ucNovaRez;
         }
 
-     
         private void SrediFormu()
         {
-            
             try
             {
-                Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.KreirajRezervaciju);
-
+                Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
                 if (odgKreiraj.Uspesno)
-                {
-                    novaRezervacija = Komunikacija.Instance
-                        .Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
-                }
+                    novaRezervacija = Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
             }
             catch (Exception ex)
             {
@@ -73,14 +70,73 @@ namespace Klijent.GuiControllers
                 UcitajRadnike();
             }
 
-            UcitajTipoveVozila();
+            UcitajUsluge();
 
             ucNovaRez.dtpDatum.MinDate = DateTime.Today;
             ucNovaRez.dtpDatum.Value = DateTime.Today;
             UcitajSlobodneTermine(DateTime.Today);
+
+            OsveziUkupno();
         }
 
-        private void BtnSacuvaj_Click(object sender, EventArgs e)
+        private void UcitajUsluge()
+        {
+            Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveUsluge);
+            if (!odgovor.Uspesno) return;
+            List<Usluga> sve = Komunikacija.Instance.Serializer.ReadType<List<Usluga>>(odgovor.Objekat);
+            ucNovaRez.cmbUsluga.DataSource = sve;
+            ucNovaRez.cmbUsluga.DisplayMember = "Naziv";
+            ucNovaRez.cmbUsluga.ValueMember = "IdUsluga";
+        }
+
+        private void CmbUsluga_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ucNovaRez.cmbUsluga.SelectedItem is Usluga u)
+                ucNovaRez.lblCena.Text = $"{u.Cena:N2} RSD";
+        }
+
+        private void BtnDodajStavku_Click(object sender, EventArgs e)
+        {
+            if (ucNovaRez.cmbUsluga.SelectedItem is not Usluga usluga)
+            {
+                MessageBox.Show("Izaberite uslugu.", "Upozorenje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string registracija = ucNovaRez.txtRegistracija.Text.Trim();
+            if (string.IsNullOrWhiteSpace(registracija))
+            {
+                MessageBox.Show("Unesite registraciju vozila.", "Upozorenje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            stavke.Add(new StavkaRezervacije
+            {
+                Usluga = usluga,
+                Cena = usluga.Cena
+            });
+
+            OsveziUkupno();
+        }
+
+        private void BtnObrisiStavku_Click(object sender, EventArgs e)
+        {
+            if (ucNovaRez.dgvStavke.CurrentRow?.DataBoundItem is StavkaRezervacije s)
+            {
+                stavke.Remove(s);
+                OsveziUkupno();
+            }
+        }
+
+        private void OsveziUkupno()
+        {
+            double ukupno = stavke.Sum(s => s.Cena);
+            ucNovaRez.lblUkupno.Text = $"Ukupno: {ukupno:N2} RSD";
+        }
+
+        private void BtnRezervisi_Click(object sender, EventArgs e)
         {
             if (ucNovaRez.cmbIzbor.SelectedItem == null)
             {
@@ -95,23 +151,18 @@ namespace Klijent.GuiControllers
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (ucNovaRez.cmbTipVozila.SelectedItem == null)
+
+            string registracija = ucNovaRez.txtRegistracija.Text.Trim();
+            if (string.IsNullOrWhiteSpace(registracija))
             {
-                MessageBox.Show("Morate izabrati tip vozila.", "Upozorenje",
+                MessageBox.Show("Unesite registraciju vozila.", "Upozorenje",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (ucNovaRez.cmbUsluga.SelectedItem == null)
+            if (stavke.Count == 0)
             {
-                MessageBox.Show("Morate izabrati uslugu.", "Upozorenje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(ucNovaRez.txtRegistracija.Text))
-            {
-                MessageBox.Show("Morate uneti registraciju vozila.", "Upozorenje",
+                MessageBox.Show("Dodajte bar jednu stavku (uslugu).", "Upozorenje",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -142,26 +193,8 @@ namespace Klijent.GuiControllers
                 novaRezervacija.Termin = (DateTime)ucNovaRez.cmbTermin.SelectedItem;
                 novaRezervacija.Radnik = radnik;
                 novaRezervacija.Korisnik = korisnik;
-
-                Usluga izabranaUsluga = (Usluga)ucNovaRez.cmbUsluga.SelectedItem;
-                TipVozila izabranTip = (TipVozila)ucNovaRez.cmbTipVozila.SelectedItem;
-
-                StavkaRezervacije stavka = new StavkaRezervacije
-                {
-                    RbStavka = 1,
-                    Usluga = izabranaUsluga,
-                    SStavke = new List<SStavkaRezervacije>
-                    {
-                        new SStavkaRezervacije
-                        {
-                            RbSStavka = 1,
-                            TipVozila = izabranTip,
-                            Registracija = ucNovaRez.txtRegistracija.Text.Trim(),
-                            Cena = izabranaUsluga.Cena
-                        }
-                    }
-                };
-                novaRezervacija.Stavke.Add(stavka);
+                novaRezervacija.Registracija = registracija;
+                novaRezervacija.Stavke = stavke.ToList();
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
                     Operacija.UbaciRezervaciju, novaRezervacija);
@@ -176,33 +209,35 @@ namespace Klijent.GuiControllers
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Resetuj formu
-                ucNovaRez.dtpDatum.Value = DateTime.Today;
-                UcitajSlobodneTermine(DateTime.Today);
-                ucNovaRez.txtRegistracija.Clear();
-                if (ucNovaRez.cmbIzbor.Items.Count > 0) ucNovaRez.cmbIzbor.SelectedIndex = 0;
-                if (ucNovaRez.cmbTipVozila.Items.Count > 0) ucNovaRez.cmbTipVozila.SelectedIndex = 0;
-
-                // Pripremi novu praznu rezervaciju
-                try
-                {
-                    Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(
-                        Operacija.KreirajRezervaciju);
-                    if (odgKreiraj.Uspesno)
-                        novaRezervacija = Komunikacija.Instance
-                            .Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
-                    else
-                        novaRezervacija = null;
-                }
-                catch
-                {
-                    novaRezervacija = null;
-                }
+                ResetujFormu();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Greška",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ResetujFormu()
+        {
+            stavke.Clear();
+            OsveziUkupno();
+            ucNovaRez.txtRegistracija.Clear();
+            ucNovaRez.dtpDatum.Value = DateTime.Today;
+            UcitajSlobodneTermine(DateTime.Today);
+            if (ucNovaRez.cmbIzbor.Items.Count > 0) ucNovaRez.cmbIzbor.SelectedIndex = 0;
+            if (ucNovaRez.cmbUsluga.Items.Count > 0) ucNovaRez.cmbUsluga.SelectedIndex = 0;
+
+            try
+            {
+                Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
+                novaRezervacija = odgKreiraj.Uspesno
+                    ? Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat)
+                    : null;
+            }
+            catch
+            {
+                novaRezervacija = null;
             }
         }
 
@@ -210,131 +245,41 @@ namespace Klijent.GuiControllers
         {
             try
             {
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiZauzeteTermine, datum);
-
-                if (!odgovor.Uspesno)
+                int? idPerionica = OdrediIdPerionica();
+                if (idPerionica == null)
                 {
-                    MessageBox.Show(odgovor.Greska, "Greška",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ucNovaRez.cmbTermin.DataSource = null;
                     return;
                 }
 
-                List<DateTime> zauzeti = Komunikacija.Instance
-                    .Serializer.ReadType<List<DateTime>>(odgovor.Objekat);
+                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
+                {
+                    Datum = datum,
+                    IdPerionica = idPerionica
+                };
 
+                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiZauzeteTermine, kriterijum);
+
+                if (!odgovor.Uspesno)
+                {
+                    MessageBox.Show(odgovor.Greska, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<DateTime> zauzeti = Komunikacija.Instance.Serializer.ReadType<List<DateTime>>(odgovor.Objekat);
+                
                 List<DateTime> sviTermini = new List<DateTime>();
-                for (int sat = 8; sat <= 19; sat++)
+                for (int sat = 8; sat < 19; sat++)
                 {
                     DateTime t = datum.Date.AddHours(sat);
-                    if (t > DateTime.Now)
-                        sviTermini.Add(t);
+                    if(t > DateTime.Now) sviTermini.Add(t);
                 }
 
-                slobodniTermini = sviTermini
-                    .Where(t => !zauzeti.Any(z => z.Hour == t.Hour))
-                    .ToList();
-
+                slobodniTermini = sviTermini.Where(t => !zauzeti.Any(z => z.Hour == t.Hour)).ToList();
+                
                 ucNovaRez.cmbTermin.DataSource = null;
                 ucNovaRez.cmbTermin.DataSource = slobodniTermini;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Greška",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
-        private void UcitajTipoveVozila()
-        {
-            Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveTipoveVozila);
-            if (!odgovor.Uspesno) return;
-            List<TipVozila> lista = Komunikacija.Instance.Serializer
-                .ReadType<List<TipVozila>>(odgovor.Objekat);
-            ucNovaRez.cmbTipVozila.DataSource = lista;
-            ucNovaRez.cmbTipVozila.DisplayMember = "Naziv";
-            ucNovaRez.cmbTipVozila.ValueMember = "IdTipVozila";
-        }
-
-        private void UcitajKorisnike()
-        {
-            try
-            {
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiSveKorisnike);
-
-                if (!odgovor.Uspesno)
-                {
-                    MessageBox.Show(odgovor.Greska, "Greška",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                List<Korisnik> lista = Komunikacija.Instance
-                    .Serializer.ReadType<List<Korisnik>>(odgovor.Objekat);
-
-                ucNovaRez.cmbIzbor.DataSource = lista;
-                ucNovaRez.cmbIzbor.DisplayMember = "ImePrezime";
-                ucNovaRez.cmbIzbor.ValueMember = "IdKorisnik";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Greška",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void UcitajRadnike()
-        {
-            try
-            {
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiSveRadnike);
-
-                if (!odgovor.Uspesno)
-                {
-                    MessageBox.Show(odgovor.Greska, "Greška",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                List<Radnik> lista = Komunikacija.Instance
-                    .Serializer.ReadType<List<Radnik>>(odgovor.Objekat);
-
-                ucNovaRez.cmbIzbor.DataSource = lista;
-                ucNovaRez.cmbIzbor.DisplayMember = "ImePrezime";
-                ucNovaRez.cmbIzbor.ValueMember = "IdRadnik";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Greška",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void DtpDatum_ValueChanged(object sender, EventArgs e)
-        {
-            UcitajSlobodneTermine(ucNovaRez.dtpDatum.Value);
-        }
-
-        private void CmbTipVozila_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (ucNovaRez.cmbTipVozila.SelectedItem == null) return;
-                TipVozila izabrani = (TipVozila)ucNovaRez.cmbTipVozila.SelectedItem;
-
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveUsluge);
-                if (!odgovor.Uspesno) return;
-
-                List<Usluga> sve = Komunikacija.Instance.Serializer
-                    .ReadType<List<Usluga>>(odgovor.Objekat);
-                List<Usluga> filtrirane = sve
-                    .Where(u => u.TipVozila?.IdTipVozila == izabrani.IdTipVozila).ToList();
-
-                ucNovaRez.cmbUsluga.DataSource = filtrirane;
-                ucNovaRez.cmbUsluga.DisplayMember = "Naziv";
-                ucNovaRez.cmbUsluga.ValueMember = "IdUsluga";
             }
             catch (Exception ex)
             {
@@ -342,10 +287,69 @@ namespace Klijent.GuiControllers
             }
         }
 
-        private void CmbUsluga_SelectedIndexChanged(object sender, EventArgs e)
+        private int? OdrediIdPerionica()
         {
-            if (ucNovaRez.cmbUsluga.SelectedItem is Usluga u)
-                ucNovaRez.lblCena.Text = $"{u.Cena:N2} RSD";
+
+            if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
+                return MainCoordinator.Instanca.PrijavljenaRadnikPerionica.IdPerionica;
+            
+           
+            if (ucNovaRez.cmbIzbor.SelectedItem is Radnik radnik && radnik.Perionica != null)
+                return radnik.Perionica.IdPerionica;
+
+            return null;
+        }
+
+        private void UcitajKorisnike()
+        {
+            try
+            {
+                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveKorisnike);
+                if (!odgovor.Uspesno)
+                {
+                    MessageBox.Show(odgovor.Greska, "Greška",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<Korisnik> lista = Komunikacija.Instance.Serializer.ReadType<List<Korisnik>>(odgovor.Objekat);
+                ucNovaRez.cmbIzbor.DataSource = lista;
+                ucNovaRez.cmbIzbor.DisplayMember = "ImePrezime";
+                ucNovaRez.cmbIzbor.ValueMember = "IdKorisnik";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UcitajRadnike()
+        {
+            try
+            {
+                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveRadnike);
+                if (!odgovor.Uspesno)
+                {
+                    MessageBox.Show(odgovor.Greska, "Greška",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<Radnik> lista = Komunikacija.Instance.Serializer.ReadType<List<Radnik>>(odgovor.Objekat);
+                ucNovaRez.cmbIzbor.DataSource = lista;
+                ucNovaRez.cmbIzbor.DisplayMember = "ImePrezimePerionica";
+                ucNovaRez.cmbIzbor.ValueMember = "IdRadnik";
+                ucNovaRez.cmbIzbor.SelectedIndexChanged += (s, e) => UcitajSlobodneTermine(ucNovaRez.dtpDatum.Value);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DtpDatum_ValueChanged(object sender, EventArgs e)
+        {
+            UcitajSlobodneTermine(ucNovaRez.dtpDatum.Value);
         }
     }
 }

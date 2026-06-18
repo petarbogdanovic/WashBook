@@ -52,10 +52,21 @@ namespace Klijent.GuiControllers
         {
             try
             {
-                string condition = IzgradiUslov();
+                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
+                {
+                    Datum = uc.dtpDatum.Value
+                };
+
+                if (uc.cmbStatus.SelectedItem?.ToString() != "Svi")
+                    kriterijum.Status = (StatusRezervacije)uc.cmbStatus.SelectedItem;
+
+                if (MainCoordinator.Instanca.PrijavljeniKorisnik != null)
+                    kriterijum.IdKorisnik = MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik;
+                else
+                    kriterijum.IdPerionica = MainCoordinator.Instanca.PrijavljenaRadnikPerionica.IdPerionica;
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiListuRezervacija, condition);
+                    Operacija.VratiListuRezervacija, kriterijum);
 
                 if (!odgovor.Uspesno)
                 {
@@ -117,8 +128,8 @@ namespace Klijent.GuiControllers
             }
             if (uc.dgvRezervacije.Columns.Contains("StatusRezervacije"))
                 uc.dgvRezervacije.Columns["StatusRezervacije"].HeaderText = "Status";
-            if (uc.dgvRezervacije.Columns.Contains("NazivTipVozila"))
-                uc.dgvRezervacije.Columns["NazivTipVozila"].HeaderText = "Tip vozila";
+            //if (uc.dgvRezervacije.Columns.Contains("NazivTipVozila"))
+            //    uc.dgvRezervacije.Columns["NazivTipVozila"].HeaderText = "Tip vozila";
             if (uc.dgvRezervacije.Columns.Contains("NazivUsluge"))
                 uc.dgvRezervacije.Columns["NazivUsluge"].HeaderText = "Usluga";
             if (uc.dgvRezervacije.Columns.Contains("Registracija"))
@@ -127,22 +138,6 @@ namespace Klijent.GuiControllers
                 uc.dgvRezervacije.Columns["Cena"].HeaderText = "Cena";
         }
 
-        private string IzgradiUslov()
-        {
-            List<string> uslovi = new List<string>();
-
-            // Datum filter
-            uslovi.Add($"CAST(r.termin AS DATE) = '{uc.dtpDatum.Value:yyyy-MM-dd}'");
-
-            // Status filter
-            if (uc.cmbStatus.SelectedItem?.ToString() != "Svi")
-                uslovi.Add($"r.statusRezervacije = '{uc.cmbStatus.SelectedItem}'");
-
-            // Ako je korisnik ulogovan, vidi samo svoje rezervacije
-            if (MainCoordinator.Instanca.PrijavljeniKorisnik != null)
-                uslovi.Add($"r.idKorisnik = {MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik}");
-
-            return string.Join(" AND ", uslovi);
-        }
+        
     }
 }

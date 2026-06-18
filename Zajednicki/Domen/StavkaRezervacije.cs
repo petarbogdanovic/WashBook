@@ -11,12 +11,13 @@ namespace Zajednicki.Domen
         public int IdRezervacija { get; set; }
         public int RbStavka { get; set; }
         public Usluga Usluga { get; set; }
-        public List<SStavkaRezervacije> SStavke { get; set; } = new List<SStavkaRezervacije>();
+        public double Cena { get; set; }
+
         [JsonIgnore] public string NazivUsluge => Usluga?.Naziv ?? "";
         [JsonIgnore] public string TableName => "StavkaRezervacije";
         [JsonIgnore] public string PrimaryKey => $"idRezervacija = {IdRezervacija} AND rbStavka = {RbStavka}";
-        [JsonIgnore] public string Values => $"{IdRezervacija}, {RbStavka}, {Usluga.IdUsluga}";
-        [JsonIgnore] public string UpdateValues => $"idUsluga = {Usluga.IdUsluga}";
+        [JsonIgnore] public string Values => $"{IdRezervacija}, {RbStavka}, {Usluga.IdUsluga}, {Cena}";
+        [JsonIgnore] public string UpdateValues => $"idUsluga = {Usluga.IdUsluga}, cena = {Cena}";
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
@@ -27,7 +28,9 @@ namespace Zajednicki.Domen
                 {
                     IdRezervacija = (int)reader["idRezervacija"],
                     RbStavka = (int)reader["rbStavka"],
-                    Usluga = new Usluga { 
+                    Cena = ReaderHasColumn(reader, "cena") ? Convert.ToDouble(reader["cena"]) : 0,
+                    Usluga = new Usluga
+                    {
                         IdUsluga = (int)reader["idUsluga"],
                         Naziv = ReaderHasColumn(reader, "nazivUsluga") ? (string)reader["nazivUsluga"] : ""
                     }

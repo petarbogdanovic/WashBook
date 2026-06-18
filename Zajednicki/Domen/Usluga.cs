@@ -11,7 +11,6 @@ namespace Zajednicki.Domen
         public int IdUsluga { get; set; }
         public string Naziv { get; set; }
         public double Cena { get; set; }
-        public TipVozila TipVozila { get; set; }
         [JsonIgnore] public string PrimaryKey => $"idUsluga = {IdUsluga}";
         [JsonIgnore] public string UpdateValues => $"naziv = '{Naziv}'";
         [JsonIgnore] public string TableName => "Usluga";
@@ -27,8 +26,7 @@ namespace Zajednicki.Domen
                 {
                     IdUsluga = (int)reader["idUsluga"],
                     Naziv = (string)reader["naziv"],
-                    Cena = Convert.ToDouble(reader["cena"]),
-                    TipVozila = new TipVozila { IdTipVozila = (int)reader["idTipVozila"] }
+                    Cena = Convert.ToDouble(reader["cena"]) 
                 };
                 lista.Add(u);
             }

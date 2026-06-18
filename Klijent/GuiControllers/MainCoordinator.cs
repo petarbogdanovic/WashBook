@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Zajednicki.Domen;
+using Zajednicki.Komunikacija;
 
 namespace Klijent.GuiControllers
 {
@@ -20,8 +21,9 @@ namespace Klijent.GuiControllers
 
         public Radnik PrijavljeniRadnik { get; set; }
         public Korisnik PrijavljeniKorisnik { get; set; }
+        public RadnikPerionica PrijavljenaRadnikPerionica { get; set; }
 
-       
+
         private FrmGlavnaRadnik frmGlavnaRadnik;
         private FrmGlavnaKorisnik frmGlavnaKorisnik;
 
@@ -30,6 +32,17 @@ namespace Klijent.GuiControllers
         {
             PrijavljeniRadnik = radnik;
             PrijavljeniKorisnik = null;
+            Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
+                Operacija.VratiPerionicaZaRadnika, radnik.IdRadnik);
+
+            if (odgovor.Uspesno)
+            {
+                List<RadnikPerionica> lista = Komunikacija.Instance
+                    .Serializer.ReadType<List<RadnikPerionica>>(odgovor.Objekat);
+
+                if (lista != null && lista.Count > 0)
+                    PrijavljenaRadnikPerionica = lista[0];
+            }
             frmGlavnaRadnik = new FrmGlavnaRadnik();
             frmGlavnaRadnik.Show();
         }
@@ -46,6 +59,7 @@ namespace Klijent.GuiControllers
         {
             PrijavljeniRadnik = null;
             PrijavljeniKorisnik = null;
+            PrijavljenaRadnikPerionica = null;
             frmGlavnaRadnik?.Close();
             frmGlavnaKorisnik?.Close();
             frmGlavnaRadnik = null;
