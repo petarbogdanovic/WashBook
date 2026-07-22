@@ -10,16 +10,10 @@ namespace Klijent.GuiControllers
 {
     public class MojeRezervacijeGuiController
     {
-        // Singleton
+        
         private static MojeRezervacijeGuiController instance;
-        public static MojeRezervacijeGuiController Instance
-        {
-            get
-            {
-                if (instance == null) instance = new MojeRezervacijeGuiController();
-                return instance;
-            }
-        }
+        public static MojeRezervacijeGuiController Instance => instance ??= new MojeRezervacijeGuiController();
+       
         private MojeRezervacijeGuiController() { }
 
         private UcMojeRezervacije uc;
@@ -29,11 +23,9 @@ namespace Klijent.GuiControllers
             uc = new UcMojeRezervacije();
             PostaviNaslov();
 
-            // Vezivanje event handlera
             uc.btnRefresh.Click += BtnRefresh_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 
-            // Inicijalno učitavanje
             UcitajRezervacije();
 
             return uc;
@@ -58,10 +50,6 @@ namespace Klijent.GuiControllers
                     IdKorisnik = MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik
                 };
 
-                //if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
-                //    kriterijum = $"r.idRadnik = {MainCoordinator.Instanca.PrijavljeniRadnik.IdRadnik}";
-                //else
-                //    kriterijum = $"r.idKorisnik = {MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik}";
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
                     Operacija.VratiListuRezervacija, kriterijum);
@@ -129,58 +117,6 @@ namespace Klijent.GuiControllers
             UcitajRezervacije();
         }
 
-        //private void BtnStorniraj_Click(object sender, EventArgs e)
-        //{
-        //    if (uc.dgvRezervacije.SelectedRows.Count == 0)
-        //    {
-        //        MessageBox.Show("Molimo odaberite rezervaciju.", "Upozorenje",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    Rezervacija selected = (Rezervacija)uc.dgvRezervacije.SelectedRows[0].DataBoundItem;
-
-        //    if (selected.StatusRezervacije != StatusRezervacije.KREIRANA)
-        //    {
-        //        MessageBox.Show("Moguće je stornirati samo rezervacije u statusu KREIRANA.",
-        //            "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    if (selected.Termin <= DateTime.Now)
-        //    {
-        //        MessageBox.Show("Nije moguće stornirati rezervaciju čiji je termin već prošao.",
-        //            "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    var potvrda = MessageBox.Show(
-        //        $"Da li ste sigurni da želite da stornirate rezervaciju #{selected.IdRezervacija}?",
-        //        "Potvrda", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-        //    if (potvrda != DialogResult.Yes) return;
-
-        //    try
-        //    {
-        //        Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-        //            Operacija.StornirajRezervaciju, selected);
-
-        //        if (odgovor.Uspesno)
-        //        {
-        //            MessageBox.Show("Rezervacija je uspešno stornirana.", "Uspeh",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //            UcitajRezervacije();
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show(odgovor.Greska, "Greška",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
+       
     }
 }

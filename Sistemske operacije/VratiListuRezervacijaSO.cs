@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DBBroker;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,56 +14,42 @@ namespace Sistemske_operacije
         private readonly RezervacijaKriterijum kriterijum;
         public List<Rezervacija> Result { get; set; }
 
-        public VratiListuRezervacijaSO(RezervacijaKriterijum condition)
+        public VratiListuRezervacijaSO(IBroker broker, RezervacijaKriterijum condition) : base (broker)
         {
             this.kriterijum = condition;
         }
 
         protected override void ExecuteConcreteOperation()
         {
-            List<string> uslovi = new List<string>();
-            List<SqlParameter> parametri = new List<SqlParameter>();
+            
+            List<string> uslovi = new();
+            List<SqlParameter> parametri = new();
 
-            string joinPerionica = "";
             if (kriterijum.IdPerionica.HasValue)
             {
-                joinPerionica = "JOIN RadnikPerionica rp ON r.idRadnik = rp.idRadnik";
-                uslovi.Add("rp.idPerionica = @idPerionica");
+                uslovi.Add("r.idRadnik IN (SELECT rp.idRadnik FROM RadnikPerionica rp WHERE rp.idPerionica = @idPerionica)");
                 parametri.Add(new SqlParameter("@idPerionica", kriterijum.IdPerionica.Value));
             }
-
             if (kriterijum.IdKorisnik.HasValue)
             {
                 uslovi.Add("r.idKorisnik = @idKorisnik");
                 parametri.Add(new SqlParameter("@idKorisnik", kriterijum.IdKorisnik.Value));
             }
-
             if (kriterijum.Datum.HasValue)
             {
                 uslovi.Add("CAST(r.termin AS DATE) = @datum");
                 parametri.Add(new SqlParameter("@datum", SqlDbType.Date) { Value = kriterijum.Datum.Value.Date });
             }
-
             if (kriterijum.Status.HasValue)
             {
                 uslovi.Add("r.statusRezervacije = @status");
                 parametri.Add(new SqlParameter("@status", kriterijum.Status.Value.ToString()));
             }
 
-            string where = uslovi.Count > 0 ? string.Join(" AND ", uslovi) : "1=1";
-
-            string cmdText = $@"
-                SELECT r.*,
-                       ra.ime AS imeRadnika, ra.prezime AS prezimeRadnika,
-                       k.ime AS imeKorisnika, k.prezime AS prezimeKorisnika
-                FROM Rezervacija r
-                JOIN Radnik ra ON r.idRadnik = ra.idRadnik
-                JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
-                {joinPerionica}
-                WHERE {where}";
-
-            Result = broker.Get(cmdText, new Rezervacija(), parametri.ToArray())
+            string where = uslovi.Count > 0 ? string.Join(" AND ", uslovi) : null;
+            Result = broker.Get(new Rezervacija(), where, parametri.ToArray())
                            .Cast<Rezervacija>().ToList();
+
         }
     }
 }

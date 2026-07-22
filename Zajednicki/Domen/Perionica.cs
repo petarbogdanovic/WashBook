@@ -21,6 +21,11 @@ namespace Zajednicki.Domen
 
         [JsonIgnore] public string Values => $"'{Naziv}', '{Adresa}', '{Telefon}', '{Email}'";
 
+        [JsonIgnore] public string SelectFrom => "Perionica";
+
+        [JsonIgnore] public string SelectColumns => "*";
+
+        [JsonIgnore] public string JoinClause => "";
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {

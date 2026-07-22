@@ -19,6 +19,10 @@ namespace Zajednicki.Domen
         [JsonIgnore] public string Values => $"{IdRezervacija}, {RbStavka}, {Usluga.IdUsluga}, {Cena}";
         [JsonIgnore] public string UpdateValues => $"idUsluga = {Usluga.IdUsluga}, cena = {Cena}";
 
+        [JsonIgnore] public string SelectFrom => "StavkaRezervacije st";
+        [JsonIgnore] public string JoinClause => "JOIN Usluga u ON u.idUsluga = st.idUsluga";
+        [JsonIgnore] public string SelectColumns => "st.*, u.naziv AS nazivUsluga";
+
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
             List<IEntity> lista = new List<IEntity>();

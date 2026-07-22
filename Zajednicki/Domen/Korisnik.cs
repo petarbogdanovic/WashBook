@@ -27,6 +27,10 @@ namespace Zajednicki.Domen
        [JsonIgnore] public string Values =>
             $"'{KorisnickoIme}', '{Sifra}','{Ime}', '{Prezime}', '{Telefon}', '{Email}', '{Adresa}', {Grad.IdGrad}";
 
+        [JsonIgnore] public string SelectFrom => "Korisnik";
+        [JsonIgnore] public string SelectColumns => "*";
+        [JsonIgnore] public string JoinClause => "";
+
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
             List<IEntity> lista = new List<IEntity>();

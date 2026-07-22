@@ -1,4 +1,5 @@
-﻿using Sistemske_operacije;
+﻿using DBBroker;
+using Sistemske_operacije;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,28 +18,32 @@ namespace Server
 
         public Radnik PrijaviRadnika(string korisnickoIme, string sifra)
         {
-            PrijaviRadnikaSO so = new PrijaviRadnikaSO(korisnickoIme, sifra);
+            IBroker broker = new Broker();
+            PrijaviRadnikaSO so = new PrijaviRadnikaSO(broker,korisnickoIme, sifra);
             so.ExecuteTemplate();
             return so.Result;
         }
 
         public Korisnik PrijaviKorisnika(string korisnickoIme, string sifra)
         {
-            PrijavaKorisnikaSO so = new PrijavaKorisnikaSO(korisnickoIme, sifra);
+            IBroker broker = new Broker();
+            PrijavaKorisnikaSO so = new PrijavaKorisnikaSO(broker, korisnickoIme, sifra);
             so.ExecuteTemplate();
             return so.Result;
         }
 
         public List<Radnik> VratiSveRadnike()
         {
-            VratiSveRadnikeSO so = new VratiSveRadnikeSO();
+            IBroker broker = new Broker();
+            VratiSveRadnikeSO so = new VratiSveRadnikeSO(broker);
             so.ExecuteTemplate();
             return so.Result.Cast<Radnik>().ToList();
         }
 
         public List<Usluga> VratiSveUsluge()
         {
-            VratiSveUslugeSO so = new VratiSveUslugeSO();
+            IBroker broker = new Broker();
+            VratiSveUslugeSO so = new VratiSveUslugeSO(broker);
             so.ExecuteTemplate();
             return so.Result;
         }
@@ -46,67 +51,78 @@ namespace Server
       
         public List<DateTime> VratiZauzetTermine(RezervacijaKriterijum kriterijum)
         {
-            VratiZauzetTermineSO so = new VratiZauzetTermineSO(kriterijum);
+            IBroker broker = new Broker();
+            VratiZauzetTermineSO so = new VratiZauzetTermineSO(broker, kriterijum);
             so.ExecuteTemplate();
             return so.Result;
         }
 
         public Rezervacija KreirajRezervaciju()
         {
-            KreirajRezervacijuSO so = new KreirajRezervacijuSO();
+            IBroker broker = new Broker();
+            KreirajRezervacijuSO so = new KreirajRezervacijuSO(broker);
             so.ExecuteTemplate();
             return so.Result;
         }
         public void UbaciRezervaciju(Rezervacija rezervacija)
         {
-            UbaciRezervacijuSO so = new UbaciRezervacijuSO(rezervacija);
+            IBroker broker = new Broker();
+            UbaciRezervacijuSO so = new UbaciRezervacijuSO(broker, rezervacija);
             so.ExecuteTemplate();
         }
 
-        public void PromeniRezervaciju(Rezervacija rezervacija)
-        {
-            PromeniRezervacijuSO so = new PromeniRezervacijuSO(rezervacija);
-            so.ExecuteTemplate();
-        }
 
         public void ObrisiRezervaciju(Rezervacija rezervacija)
         {
-            ObrisiRezervacijuSO so = new ObrisiRezervacijuSO(rezervacija);
+            IBroker broker = new Broker();
+            ObrisiRezervacijuSO so = new ObrisiRezervacijuSO(broker,rezervacija);
             so.ExecuteTemplate();
         }
 
         public void StornirajRezervaciju(int idRezervacije)
         {
-            StornirajRezervacijuSO so = new StornirajRezervacijuSO(idRezervacije);
+            IBroker broker = new Broker();
+            StornirajRezervacijuSO so = new StornirajRezervacijuSO(broker, idRezervacije);
             so.ExecuteTemplate();
         }
 
-        public Rezervacija PretraziRezervaciju(int id)
+        public Rezervacija PretraziRezervaciju(int idRezervacija)
         {
-            PretraziRezervacijuSO so = new PretraziRezervacijuSO(id);
+            IBroker broker = new Broker();
+            PretraziRezervacijuSO so = new PretraziRezervacijuSO(broker, idRezervacija);
             so.ExecuteTemplate();
             return so.Result;
         }
 
         public List<Rezervacija> VratiListuRezervacija(RezervacijaKriterijum kriterijum)
         {
-            VratiListuRezervacijaSO so = new VratiListuRezervacijaSO(kriterijum);
+            IBroker broker = new Broker();
+            VratiListuRezervacijaSO so = new VratiListuRezervacijaSO(broker, kriterijum);
             so.ExecuteTemplate();
             return so.Result;
         }
 
         public List<Korisnik> VratiSveKorisnike()
         {
-            VratiSveKorisnikeSO so = new VratiSveKorisnikeSO();
+            IBroker broker = new Broker();
+            VratiSveKorisnikeSO so = new VratiSveKorisnikeSO(broker);
             so.ExecuteTemplate();
             return so.Result.Cast<Korisnik>().ToList();
         }
 
         public List<RadnikPerionica> VratiPerionicaZaRadnika(int idRadnik)
         {
-            VratiPerionicuZaRadnikaSO so = new VratiPerionicuZaRadnikaSO(idRadnik);
+            IBroker broker = new Broker();
+            VratiPerionicuZaRadnikaSO so = new VratiPerionicuZaRadnikaSO(broker, idRadnik);
             so.ExecuteTemplate();
             return so.Result;
+        }
+
+        public void IzmeniRezervaciju(Rezervacija rezervacija)
+        {
+            IBroker broker = new Broker();
+            IzmeniRezervacijuSO so = new IzmeniRezervacijuSO(broker, rezervacija);
+            so.ExecuteTemplate();
         }
     }
 }

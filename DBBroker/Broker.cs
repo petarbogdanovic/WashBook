@@ -4,7 +4,7 @@ using Zajednicki.Domen;
 
 namespace DBBroker
 {
-    public class Broker
+    public class Broker : IBroker
     {
         private DbConnection connection;
 
@@ -37,15 +37,23 @@ namespace DBBroker
             connection.OpenConnection();
         }
       
-        public List<IEntity> Get(string cmdText, IEntity entity, params SqlParameter[] parameters)
+        public List<IEntity> Get( IEntity entity, string where = null, params SqlParameter[] parameters)
         {
+
+            string sql = $"SELECT {entity.SelectColumns} FROM {entity.SelectFrom}";
+            if (!string.IsNullOrWhiteSpace(entity.JoinClause))
+                sql += $" {entity.JoinClause}";
+            if (!string.IsNullOrWhiteSpace(where))
+                sql += $" WHERE {where}";
+
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = cmdText;
+            cmd.CommandText = sql;
             if (parameters != null && parameters.Length > 0)
                 cmd.Parameters.AddRange(parameters);
-            Console.WriteLine(cmdText);   
+
             using SqlDataReader reader = cmd.ExecuteReader();
             return entity.GetReaderList(reader);
+
         }
 
         public void Add(IEntity entity)

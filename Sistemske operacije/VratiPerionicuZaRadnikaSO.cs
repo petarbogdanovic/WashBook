@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DBBroker;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,19 +12,13 @@ namespace Sistemske_operacije
         private int idRadnik;
         public List<RadnikPerionica> Result { get; set; }
 
-        public VratiPerionicuZaRadnikaSO(int idRadnik)
+        public VratiPerionicuZaRadnikaSO(IBroker broker, int idRadnik) : base(broker)
         {
             this.idRadnik = idRadnik;
         }
         protected override void ExecuteConcreteOperation()
         {
-            string cmdText = $@"
-                    SELECT rp.idRadnik, rp.idPerionica, rp.smena, p.naziv AS nazivPerionica, p.adresa AS adresaPerionica
-                    FROM RadnikPerionica rp
-                    JOIN Perionica p ON rp.idPerionica = p.idPerionica
-                    WHERE rp.idRadnik = @idRadnik";
-
-            Result = broker.Get(cmdText, new RadnikPerionica(), 
+            Result = broker.Get(new RadnikPerionica(), "rp.idRadnik = @idRadnik",
                 new SqlParameter("@idRadnik", idRadnik))
                 .Cast<RadnikPerionica>().ToList();
         }

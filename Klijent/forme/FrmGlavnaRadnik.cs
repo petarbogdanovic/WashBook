@@ -8,14 +8,12 @@ using System.Text;
 using System.Windows.Forms;
 using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
-using static System.Net.Mime.MediaTypeNames;
-using Font = System.Drawing.Font;
+
 
 namespace Klijent
 {
     public partial class FrmGlavnaRadnik : Form
     {
-        private Button aktivnoDugme;
         public FrmGlavnaRadnik()
         {
             InitializeComponent();
@@ -28,8 +26,7 @@ namespace Klijent
             Radnik r = MainCoordinator.Instanca.PrijavljeniRadnik;
             lblKorisnik.Text = $"{r.Ime} {r.Prezime}";
             PrikaziPerionicu(r);
-            PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
-            PostaviAktivnoDugme(btnSveRezervacije);
+            MainCoordinator.Instanca.ShowSveRezervacije(sender, e);
         }
 
         private void PrikaziPerionicu(Radnik r)
@@ -41,17 +38,7 @@ namespace Klijent
             }
         }
 
-        private void PostaviAktivnoDugme(Button btn)
-        {
-            if (aktivnoDugme != null)
-            {
-                aktivnoDugme.BackColor = Color.Transparent;
-                aktivnoDugme.ForeColor = Color.FromArgb(200, 220, 240);
-            }
-            aktivnoDugme = btn;
-            aktivnoDugme.BackColor = Color.FromArgb(46, 134, 222);
-            aktivnoDugme.ForeColor = Color.White;
-        }
+       
 
         public void PrikaziKontrol(UserControl uc)
         {
@@ -62,23 +49,14 @@ namespace Klijent
 
 
 
-        private void btnSveRezervacije_Click(object sender, EventArgs e)
-        {
-            PostaviAktivnoDugme(btnSveRezervacije);
-            PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
-        }
+        private void btnSveRezervacije_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowSveRezervacije(sender, e);
+       
 
-        private void btnNovaRezervacija_Click(object sender, EventArgs e)
-        {
-            PostaviAktivnoDugme(btnNovaRezervacija);
-            PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
-        }
+        private void btnNovaRezervacija_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowNovaRezervacijaRadnik(sender, e);
+       
 
-        private void btnPretraga_Click(object sender, EventArgs e)
-        {
-            PostaviAktivnoDugme(btnPretraga);
-            PrikaziKontrol((UserControl)PretragaGuiController.Instance.CreateUC());
-        }
+        private void btnPretraga_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowPretraga(sender, e);
+       
 
         private void btnOdjava_Click(object sender, EventArgs e)
         {
@@ -88,6 +66,14 @@ namespace Klijent
 
             if (dr == DialogResult.Yes)
                 MainCoordinator.Instanca.Odjavi();
+        }
+
+        private void FrmGlavnaRadnik_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && !NovaRezGuiController.Instance.MozeNapustiti())
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DBBroker;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
@@ -10,38 +12,23 @@ namespace Sistemske_operacije
         private int idRezervacija;
         public Rezervacija? Result { get; set; }
 
-        public PretraziRezervacijuSO(int idRezervacija)
+        public PretraziRezervacijuSO(IBroker broker, int idRezervacija) : base (broker)
         {
             this.idRezervacija = idRezervacija;
         }
 
         protected override void ExecuteConcreteOperation()
         {
-            string headerCmd = $@"
-                SELECT r.*,
-                       ra.ime AS imeRadnika, ra.prezime AS prezimeRadnika,
-                       k.ime AS imeKorisnika, k.prezime AS prezimeKorisnika
-                FROM Rezervacija r
-                JOIN Radnik ra ON r.idRadnik = ra.idRadnik
-                JOIN Korisnik k ON r.idKorisnik = k.idKorisnik
-                WHERE r.idRezervacija = {idRezervacija}";
 
-            Rezervacija rezervacija = broker.Get(headerCmd, new Rezervacija())
-                .Cast<Rezervacija>()
-                .FirstOrDefault()
-                ?? throw new Exception($"Rezervacija sa ID {idRezervacija} nije pronađena.");
+            Rezervacija rezervacija = broker.Get(new Rezervacija(), "r.idRezervacija = @id", new SqlParameter("@id", idRezervacija))
+                .Cast<Rezervacija>().FirstOrDefault()  ?? throw new Exception($"Rezervacija sa ID {idRezervacija} nije pronađena.");
 
-            string stavkeCmd = $@"
-                SELECT st.*, u.naziv AS nazivUsluga
-                FROM StavkaRezervacije st
-                JOIN Usluga u ON u.idUsluga = st.idUsluga
-                WHERE st.idRezervacija = {idRezervacija}";
-
-            rezervacija.Stavke = broker.Get(stavkeCmd, new StavkaRezervacije())
-                .Cast<StavkaRezervacije>()
-                .ToList();
+            rezervacija.Stavke = broker.Get(new StavkaRezervacije(), "st.idRezervacija = @id",
+                    new SqlParameter("@id", idRezervacija))
+                    .Cast<StavkaRezervacije>().ToList();
 
             Result = rezervacija;
+
         }
     }
 }

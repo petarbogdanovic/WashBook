@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
 using Microsoft.Data.SqlClient;
+using DBBroker;
 
 namespace Sistemske_operacije
 {
@@ -12,7 +13,7 @@ namespace Sistemske_operacije
         private string sifra;
         public Korisnik Result { get; set; }
 
-        public PrijavaKorisnikaSO(string korisnickoIme, string sifra)
+        public PrijavaKorisnikaSO(IBroker broker, string korisnickoIme, string sifra) : base(broker)
         {
             this.korisnickoIme = korisnickoIme;
             this.sifra = sifra;
@@ -21,13 +22,12 @@ namespace Sistemske_operacije
         protected override void ExecuteConcreteOperation()
         {
 
-            string cmdText = "SELECT * FROM Korisnik WHERE KorisnickoIme=@kime AND Sifra=@sifra";
-
-            List<IEntity> lista = broker.Get(cmdText, new Korisnik(),
+            List<IEntity> lista = broker.Get(new Korisnik(),
+                "korisnickoIme = @kime AND sifra = @sifra",
                 new SqlParameter("@kime", korisnickoIme),
                 new SqlParameter("@sifra", sifra));
 
-            Result = lista.Cast<Korisnik>().FirstOrDefault() 
+            Result = lista.Cast<Korisnik>().FirstOrDefault()
                 ?? throw new Exception("Korisničko ime ili šifra nisu ispravni.");
         }
     }

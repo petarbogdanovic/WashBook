@@ -24,18 +24,35 @@ namespace Zajednicki.Domen
         [JsonIgnore]
         public string UpdateValues =>
             $"datumRezervacije = '{DatumRezervacije:yyyy-MM-dd}', " +
-            $"termin = '{Termin:yyyy-MM-dd HH:mm:ss}', " +
+            $"termin = {(Termin == default ? "NULL" : $"'{Termin:yyyy-MM-dd HH:mm:ss}'")}, " +
             $"statusRezervacije = '{StatusRezervacije}', " +
-            $"idRadnik = {Radnik.IdRadnik}, idKorisnik = {Korisnik.IdKorisnik}";
+            $"idRadnik = {(Radnik != null ? Radnik.IdRadnik.ToString() : "NULL")}, " +
+            $"idKorisnik = {(Korisnik != null ? Korisnik.IdKorisnik.ToString() : "NULL")}, " +
+            $"registracija = {(string.IsNullOrEmpty(Registracija) ? "NULL" : $"'{Registracija}'")}";
         [JsonIgnore] public string TableName => "Rezervacija";
 
         [JsonIgnore]
         public string Values =>
             $"'{DatumRezervacije:yyyy-MM-dd}', " +
-            $"'{Termin:yyyy-MM-dd HH:mm:ss}', " +
+            $"{(Termin == default ? "NULL" : $"'{Termin:yyyy-MM-dd HH:mm:ss}'")}, " +
             $"'{StatusRezervacije}', " +
-            $"{Radnik.IdRadnik}, {Korisnik.IdKorisnik}, " +
-            $"'{Registracija}'";
+            $"{(Radnik != null ? Radnik.IdRadnik.ToString() : "NULL")}, " +
+            $"{(Korisnik != null ? Korisnik.IdKorisnik.ToString() : "NULL")}, " +
+            $"{(string.IsNullOrEmpty(Registracija) ? "NULL" : $"'{Registracija}'")}";
+
+        [JsonIgnore]
+        public string SelectColumns =>
+            "r.*, ra.ime AS imeRadnika, ra.prezime AS prezimeRadnika, " +
+            "k.ime AS imeKorisnika, k.prezime AS prezimeKorisnika";
+
+        [JsonIgnore]
+        public string JoinClause =>
+            "r Rezervacija".Length > 0 ?   
+            "JOIN Radnik ra ON r.idRadnik = ra.idRadnik " +
+            "JOIN Korisnik k ON r.idKorisnik = k.idKorisnik" : "";
+
+        [JsonIgnore]
+        public string SelectFrom => "Rezervacija r";
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {

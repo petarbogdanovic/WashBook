@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBBroker;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
@@ -9,7 +10,7 @@ namespace Sistemske_operacije
     {
         private int idRezervacije;
 
-        public StornirajRezervacijuSO(int idRezervacije)
+        public StornirajRezervacijuSO(IBroker broker, int idRezervacije) : base(broker) 
         {
             this.idRezervacije = idRezervacije;
         }

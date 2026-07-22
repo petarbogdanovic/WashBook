@@ -20,6 +20,16 @@ namespace Zajednicki.Domen
         public Perionica Perionica { get; set; }
         public int? Smena { get; set; }
 
+        [JsonIgnore] public string SelectFrom => "Radnik r";
+        [JsonIgnore]
+        public string JoinClause =>
+            "LEFT JOIN RadnikPerionica rp ON r.idRadnik = rp.idRadnik " +
+            "LEFT JOIN Perionica p ON rp.idPerionica = p.idPerionica";
+        [JsonIgnore]
+        public string SelectColumns =>
+            "r.*, p.idPerionica AS idPerionica, p.naziv AS nazivPerionica, " +
+            "p.adresa AS adresaPerionica, rp.smena AS smena";
+
         [JsonIgnore] public string ImePrezimePerionica
         {
             get

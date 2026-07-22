@@ -13,5 +13,8 @@ namespace Zajednicki.Domen
         string UpdateValues { get; }
 
         List<IEntity> GetReaderList(SqlDataReader reader);
+        string SelectFrom { get; }
+        string SelectColumns { get; }
+        string JoinClause {  get; }
     }
 }

@@ -188,6 +188,7 @@
             Name = "FrmGlavnaRadnik";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "WashBook";
+            FormClosing += FrmGlavnaRadnik_FormClosing;
             Load += FrmGlavnaRadnik_Load;
             pnlSidebar.ResumeLayout(false);
             pnlSidebar.PerformLayout();

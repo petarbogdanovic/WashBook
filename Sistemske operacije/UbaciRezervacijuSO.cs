@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBBroker;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Zajednicki.Domen;
@@ -9,7 +10,7 @@ namespace Sistemske_operacije
     {
         private Rezervacija rezervacija;
 
-        public UbaciRezervacijuSO(Rezervacija rezervacija)
+        public UbaciRezervacijuSO(IBroker broker, Rezervacija rezervacija) : base(broker)
         {
             this.rezervacija = rezervacija;
         }
@@ -17,13 +18,12 @@ namespace Sistemske_operacije
         protected override void ExecuteConcreteOperation()
         {
 
-            broker.Add(rezervacija);
-            int idRezervacija = broker.GetLastInsertedId("Rezervacija", "idRezervacija");
+            broker.Update(rezervacija);
 
             int rbStavka = 1;
             foreach (StavkaRezervacije stavka in rezervacija.Stavke)
             {
-                stavka.IdRezervacija = idRezervacija;
+                stavka.IdRezervacija = rezervacija.IdRezervacija;
                 stavka.RbStavka = rbStavka;
                 broker.Add(stavka);
                 rbStavka++;

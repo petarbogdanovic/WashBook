@@ -17,7 +17,7 @@ namespace Zajednicki.Komunikacija
         // Rezervacija
         KreirajRezervaciju,
         UbaciRezervaciju,
-        PromeniRezervaciju,
+        IzmeniRezervaciju,
         ObrisiRezervaciju,
         PretraziRezervaciju,
         VratiListuRezervacija,

@@ -14,11 +14,13 @@ namespace Klijent.forme
     public partial class FrmDetaljiRezervacije : Form
     {
         private Rezervacija rezervacija;
+        private BindingList<StavkaRezervacije> stavkaRezervacije;
 
         public FrmDetaljiRezervacije(Rezervacija rezervacija)
         {
             InitializeComponent();
             this.rezervacija = rezervacija;
+
         }
 
 
@@ -69,11 +71,26 @@ namespace Klijent.forme
             lblKorisnik.Text = $"Korisnik: {rezervacija.ImeKorisnika}";
             lblRadnik.Text = $"Radnik: {rezervacija.ImeRadnika}";
 
+            stavkaRezervacije = new BindingList<StavkaRezervacije>(rezervacija.Stavke);
             dgvStavkeDetalji.DataSource = null;
-            dgvStavkeDetalji.DataSource = rezervacija.Stavke;
+            dgvStavkeDetalji.DataSource = stavkaRezervacije;
 
-            double ukupno = rezervacija.Stavke?.Sum(s => s.Cena) ?? 0;
+            UcitajUsluge();
+
+
+            double ukupno = stavkaRezervacije?.Sum(s => s.Cena) ?? 0;
             lblUkupno.Text = $"Ukupno: {ukupno:N2} RSD";
+            PodesiVidljivost();
+        }
+
+        private void UcitajUsluge()
+        {
+            Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveUsluge);
+            if (!odgovor.Uspesno) return;
+            List<Usluga> sve = Komunikacija.Instance.Serializer.ReadType<List<Usluga>>(odgovor.Objekat);
+            cmbUsluga.DataSource = sve;
+            cmbUsluga.DisplayMember = "Naziv";
+            cmbUsluga.ValueMember = "IdUsluga";
         }
 
         private void btnPromeniStatus_Click(object sender, EventArgs e)
@@ -90,19 +107,9 @@ namespace Klijent.forme
 
         private void btnStorniraj_Click(object sender, EventArgs e)
         {
-            if (rezervacija.StatusRezervacije != StatusRezervacije.KREIRANA)
-            {
-                MessageBox.Show("Moguće je stornirati samo rezervacije u statusu KREIRANA.",
-                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+           
 
-            if (rezervacija.Termin <= DateTime.Now)
-            {
-                MessageBox.Show("Nije moguće stornirati rezervaciju čiji je termin već prošao.",
-                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (!MozeDaSeMenja()) return;
 
             var potvrda = MessageBox.Show(
                 $"Da li ste sigurni da želite da stornirate rezervaciju #{rezervacija.IdRezervacija}?",
@@ -135,7 +142,117 @@ namespace Klijent.forme
 
         private void btnZatvori_Click(object sender, EventArgs e)
         {
+
             this.Close();
+        }
+
+
+
+
+        private void btnDodajStavku_Click(object sender, EventArgs e)
+        {
+            if (cmbUsluga.SelectedItem is not Usluga usluga)
+            {
+                MessageBox.Show("Izaberite uslugu.", "Upozorenje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (stavkaRezervacije.Any(s => s.Usluga?.IdUsluga == usluga.IdUsluga))
+            {
+                MessageBox.Show($"{usluga.Naziv}  usluga je već dodata", "Upozorenje",
+                    MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                return;
+            }
+
+            stavkaRezervacije.Add(new StavkaRezervacije
+            {
+                Usluga = usluga,
+                Cena = usluga.Cena
+            });
+
+        }
+
+        private void btnObrisiStavku_Click(object sender, EventArgs e)
+        {
+            if (dgvStavkeDetalji.CurrentRow?.DataBoundItem is StavkaRezervacije s)
+            {
+                stavkaRezervacije.Remove(s);
+
+            }
+        }
+
+        private void cmbUsluga_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbUsluga.SelectedItem is Usluga u)
+                lblCena.Text = $"{u.Cena} RSD";
+        }
+
+        private bool MozeDaSeMenja()
+        {
+            if (rezervacija.StatusRezervacije != StatusRezervacije.KREIRANA)
+            {
+                MessageBox.Show("Izmene su moguće samo dok je rezervacija u statusu KREIRANA.",
+                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (rezervacija.Termin <= DateTime.Now)
+            {
+                MessageBox.Show("Nije moguće menjati rezervaciju čiji je termin već prošao.",
+                    "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool StavkeSeMoguMenjti()
+        {
+            return rezervacija.StatusRezervacije == StatusRezervacije.KREIRANA
+                && rezervacija.Termin > DateTime.Now;
+        }
+
+        private void PodesiVidljivost()
+        {
+            bool moze = StavkeSeMoguMenjti();
+
+            cmbUsluga.Enabled = moze;
+            btnDodajStavku.Enabled = moze;
+            btnObrisiStavku.Enabled = moze;
+            btnSacuvajIzmene.Enabled = moze;
+        }
+
+        private void btnSacuvajIzmene_Click(object sender, EventArgs e)
+        {
+            if (!MozeDaSeMenja()) return;
+
+            if(stavkaRezervacije.Count == 0)
+            {
+                MessageBox.Show("Rezervacija mora imati bar jednu uslugu.",
+                     "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            rezervacija.Stavke = new List<StavkaRezervacije>(stavkaRezervacije);
+
+            try
+            {
+                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.IzmeniRezervaciju, rezervacija);
+                if (odgovor.Uspesno)
+                {
+                    MessageBox.Show("Rezervacija je uspešno izmenjena.", "Uspeh",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Osvezi();
+                }
+                else
+                    MessageBox.Show(odgovor.Greska, "Greška",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

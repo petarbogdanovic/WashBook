@@ -24,6 +24,9 @@ namespace Zajednicki.Domen
 
         [JsonIgnore] public string UpdateValues => $"smena = {Smena}";
 
+        [JsonIgnore] public string SelectFrom => "RadnikPerionica rp";
+        [JsonIgnore] public string JoinClause => "JOIN Perionica p ON rp.idPerionica = p.idPerionica";
+        [JsonIgnore] public string SelectColumns => "rp.idRadnik, rp.idPerionica, rp.smena, p.naziv AS nazivPerionica, p.adresa AS adresaPerionica";
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
             List<IEntity> lista = new List<IEntity>();

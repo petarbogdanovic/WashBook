@@ -44,7 +44,7 @@ namespace Klijent
                 rezervacija.StatusRezervacije = (StatusRezervacije)cmbStatus.SelectedItem;
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.PromeniRezervaciju, rezervacija);
+                    Operacija.IzmeniRezervaciju, rezervacija);
 
                 if (!odgovor.Uspesno)
                 {

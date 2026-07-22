@@ -13,7 +13,7 @@ namespace Sistemske_operacije
         private string sifra;
         public Radnik Result { get; set; }
 
-        public PrijaviRadnikaSO(string korisnickoIme, string sifra)
+        public PrijaviRadnikaSO(IBroker broker,string korisnickoIme, string sifra) : base(broker)
         {
             this.korisnickoIme = korisnickoIme;
             this.sifra = sifra;
@@ -22,13 +22,12 @@ namespace Sistemske_operacije
         protected override void ExecuteConcreteOperation()
         {
 
-            string cmdText = "SELECT * FROM Radnik WHERE KorisnickoIme=@kime AND Sifra=@sifra";
+            List<IEntity> lista = broker.Get(new Radnik(),
+               "r.korisnickoIme = @kime AND r.sifra = @sifra",
+               new SqlParameter("@kime", korisnickoIme),
+               new SqlParameter("@sifra", sifra));
 
-            List<IEntity> lista = broker.Get(cmdText, new Radnik(),
-                new SqlParameter("@kime", korisnickoIme),
-                new SqlParameter("@sifra", sifra));
-
-            Result = lista.Cast<Radnik>().FirstOrDefault() 
+            Result = lista.Cast<Radnik>().FirstOrDefault()
                 ?? throw new Exception("Korisničko ime ili šifra nisu ispravni.");
 
         }

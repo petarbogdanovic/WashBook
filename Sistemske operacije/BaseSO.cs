@@ -4,11 +4,11 @@ namespace Sistemske_operacije
 {
     public abstract class BaseSO
     {
-        protected Broker broker;
+        protected IBroker broker;
 
-        public BaseSO()
+        public BaseSO(IBroker broker)
         {
-            broker = new Broker();
+            this.broker = broker;
         }
 
         public void ExecuteTemplate()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.GuiControllers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +19,6 @@ namespace Klijent
         {
             InitializeComponent();
             this.rezervacija = rezervacija;
-
 
         }
 
@@ -42,8 +42,13 @@ namespace Klijent
         {
             try
             {
+                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
+                {
+                    Datum = datum,
+                    IdPerionica = rezervacija.Radnik.IdRadnik
+                };
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.VratiZauzeteTermine, datum);
+                    Operacija.VratiZauzeteTermine, kriterijum);
 
                 if (!odgovor.Uspesno)
                 {
@@ -104,7 +109,7 @@ namespace Klijent
                 rezervacija.Termin = noviTermin;
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.PromeniRezervaciju, rezervacija);
+                    Operacija.IzmeniRezervaciju, rezervacija);
 
                 if (!odgovor.Uspesno)
                 {

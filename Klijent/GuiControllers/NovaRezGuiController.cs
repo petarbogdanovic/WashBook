@@ -21,6 +21,7 @@ namespace Klijent.GuiControllers
         }
         private NovaRezGuiController() { }
 
+        private bool sacuvano = false;
         private UCNovaRez ucNovaRez;
         private List<DateTime> slobodniTermini = new List<DateTime>();
         private Rezervacija novaRezervacija;
@@ -50,14 +51,21 @@ namespace Klijent.GuiControllers
             try
             {
                 Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
-                if (odgKreiraj.Uspesno)
-                    novaRezervacija = Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
+                if (!odgKreiraj.Uspesno)
+                {
+                    MessageBox.Show("Sistem ne može da kreira rezervaciju.", "Greška",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                novaRezervacija = Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Sistem ne može da kreira rezervaciju: {ex.Message}",
                     "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            sacuvano = false;
 
             if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
             {
@@ -82,7 +90,12 @@ namespace Klijent.GuiControllers
         private void UcitajUsluge()
         {
             Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(Operacija.VratiSveUsluge);
-            if (!odgovor.Uspesno) return;
+            if (!odgovor.Uspesno)
+            {
+                MessageBox.Show("Sistem ne može da učita listu usluga.", "Greška", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             List<Usluga> sve = Komunikacija.Instance.Serializer.ReadType<List<Usluga>>(odgovor.Objekat);
             ucNovaRez.cmbUsluga.DataSource = sve;
             ucNovaRez.cmbUsluga.DisplayMember = "Naziv";
@@ -100,6 +113,13 @@ namespace Klijent.GuiControllers
             if (ucNovaRez.cmbUsluga.SelectedItem is not Usluga usluga)
             {
                 MessageBox.Show("Izaberite uslugu.", "Upozorenje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (stavke.Any(s => s.Usluga?.IdUsluga == usluga.IdUsluga))
+            {
+                MessageBox.Show($"{usluga.Naziv} usluga je već dodata!", "Upozorenje",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -209,7 +229,13 @@ namespace Klijent.GuiControllers
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                ResetujFormu();
+                sacuvano = true;   
+                
+
+                if (MainCoordinator.Instanca.PrijavljeniKorisnik != null)
+                    MainCoordinator.Instanca.ShowMojeRezervacije(null, EventArgs.Empty);  
+                else
+                    MainCoordinator.Instanca.ShowSveRezervacije(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -218,29 +244,35 @@ namespace Klijent.GuiControllers
             }
         }
 
-        private void ResetujFormu()
+        public bool MozeNapustiti()
         {
-            stavke.Clear();
-            OsveziUkupno();
-            ucNovaRez.txtRegistracija.Clear();
-            ucNovaRez.dtpDatum.Value = DateTime.Today;
-            UcitajSlobodneTermine(DateTime.Today);
-            if (ucNovaRez.cmbIzbor.Items.Count > 0) ucNovaRez.cmbIzbor.SelectedIndex = 0;
-            if (ucNovaRez.cmbUsluga.Items.Count > 0) ucNovaRez.cmbUsluga.SelectedIndex = 0;
 
-            try
+            if (novaRezervacija == null || sacuvano)
+                return true;   
+
+            var odgovor = MessageBox.Show(
+                "Imate nedovršenu rezervaciju. Da li ste sigurni da želite da prekinete unos?",
+                "Potvrda", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (odgovor != DialogResult.Yes)
+                return false;  
+
+            try { Komunikacija.Instance.PosaljiZahtev(Operacija.ObrisiRezervaciju, novaRezervacija); }
+            catch {  }
+
+            novaRezervacija = null;
+            return true;
+        }
+
+        public void ObrisiNesacuvanu()
+        {
+            if (novaRezervacija != null && !sacuvano)
             {
-                Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
-                novaRezervacija = odgKreiraj.Uspesno
-                    ? Komunikacija.Instance.Serializer.ReadType<Rezervacija>(odgKreiraj.Objekat)
-                    : null;
-            }
-            catch
-            {
+                try { Komunikacija.Instance.PosaljiZahtev(Operacija.ObrisiRezervaciju, novaRezervacija); }
+                catch { }
                 novaRezervacija = null;
             }
         }
-
         private void UcitajSlobodneTermine(DateTime datum)
         {
             try

@@ -15,27 +15,19 @@ namespace Klijent
 {
     public partial class FrmGlavnaKorisnik : Form
     {
-        private Button aktivnoDugme;
         public FrmGlavnaKorisnik()
         {
             InitializeComponent();
             MainCoordinator.Instanca.RegistrujFrmGlavnaKorisnik(this);
 
-            
+
         }
 
-        private void btnMojeRezervacije_Click(object sender, EventArgs e)
-        {
-            PostaviAktivnoDugme(btnMojeRezervacije);
-            PrikaziKontrol((UserControl)MojeRezervacijeGuiController.Instance.CreateUC());
-        }
+        private void btnMojeRezervacije_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowMojeRezervacije(sender, e);
+        
 
-        private void btnNovaRezervacija_Click(object sender, EventArgs e)
-        {
-
-            PostaviAktivnoDugme(btnNovaRezervacija);
-            PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
-        }
+        private void btnNovaRezervacija_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowNovaRezervacijaKorisnik(sender, e);
+      
 
         private void btnOdjava_Click(object sender, EventArgs e)
         {
@@ -51,27 +43,23 @@ namespace Klijent
         {
             Korisnik k = MainCoordinator.Instanca.PrijavljeniKorisnik;
             lblKorisnik.Text = $"{k.Ime} {k.Prezime}";
-            PrikaziKontrol((UserControl)MojeRezervacijeGuiController.Instance.CreateUC());
-            PostaviAktivnoDugme(btnMojeRezervacije);
+            MainCoordinator.Instanca.ShowMojeRezervacije(sender, e);
         }
 
-        private void PostaviAktivnoDugme(Button btn)
-        {
-            if (aktivnoDugme != null)
-            {
-                aktivnoDugme.BackColor = Color.Transparent;
-                aktivnoDugme.ForeColor = Color.FromArgb(200, 220, 240);
-            }
-            aktivnoDugme = btn;
-            aktivnoDugme.BackColor = Color.FromArgb(46, 134, 222);
-            aktivnoDugme.ForeColor = Color.White;
-        }
-
+       
         public void PrikaziKontrol(UserControl uc)
         {
             pnlSadrzaj.Controls.Clear();
             uc.Dock = DockStyle.Fill;
             pnlSadrzaj.Controls.Add(uc);
+        }
+
+        private void FrmGlavnaKorisnik_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && !NovaRezGuiController.Instance.MozeNapustiti())
+            {
+                e.Cancel = true;  
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Klijent.forme;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace Klijent.GuiControllers
 {
     public class PretragaGuiController
     {
-        // Singleton
+        
         private static PretragaGuiController instance;
         public static PretragaGuiController Instance
         {
@@ -28,8 +29,8 @@ namespace Klijent.GuiControllers
             uc = new UcPretragaRezervacija();
             InicijalizujFilter();
 
-            // Vezivanje event handlera
             uc.btnPretrazi.Click += BtnPretrazi_Click;
+            uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 
             return uc;
         }
@@ -49,6 +50,21 @@ namespace Klijent.GuiControllers
         }
 
         private void BtnPretrazi_Click(object sender, EventArgs e)
+        {
+            IzvrsiPretragu();
+        }
+        private void DgvRezervacije_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            Rezervacija izabrana = (Rezervacija)uc.dgvRezervacije.Rows[e.RowIndex].DataBoundItem;
+
+            new FrmDetaljiRezervacije(izabrana).ShowDialog();
+
+            IzvrsiPretragu();
+        }
+
+        private void IzvrsiPretragu()
         {
             try
             {
@@ -88,8 +104,6 @@ namespace Klijent.GuiControllers
             }
         }
 
-      
-
         private void PodesiKolone()
         {
             if (uc.dgvRezervacije.Columns.Count == 0) return;
@@ -101,7 +115,7 @@ namespace Klijent.GuiControllers
             // Prikaži samo relevantne
             string[] vidljive = {  "DatumRezervacije",
                                    "Termin", "ImeKorisnika",
-                                   "StatusRezervacije","NazivTipVozila",
+                                   "StatusRezervacije",
                                     "NazivUsluge","Registracija", "Cena" };
 
             foreach (string ime in vidljive)
@@ -128,8 +142,6 @@ namespace Klijent.GuiControllers
             }
             if (uc.dgvRezervacije.Columns.Contains("StatusRezervacije"))
                 uc.dgvRezervacije.Columns["StatusRezervacije"].HeaderText = "Status";
-            //if (uc.dgvRezervacije.Columns.Contains("NazivTipVozila"))
-            //    uc.dgvRezervacije.Columns["NazivTipVozila"].HeaderText = "Tip vozila";
             if (uc.dgvRezervacije.Columns.Contains("NazivUsluge"))
                 uc.dgvRezervacije.Columns["NazivUsluge"].HeaderText = "Usluga";
             if (uc.dgvRezervacije.Columns.Contains("Registracija"))

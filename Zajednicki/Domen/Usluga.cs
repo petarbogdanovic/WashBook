@@ -16,6 +16,11 @@ namespace Zajednicki.Domen
         [JsonIgnore] public string TableName => "Usluga";
         [JsonIgnore] public string Values => $"'{Naziv}'";
 
+        [JsonIgnore] public string SelectFrom => "Usluga";
+
+        [JsonIgnore] public string SelectColumns => "*";
+
+        [JsonIgnore] public string JoinClause => "";
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {

@@ -105,12 +105,6 @@ namespace Server
                             Kontroler.Instance.UbaciRezervaciju(r);
                             return new Odgovor { Uspesno = true };
                         }
-                    case Operacija.PromeniRezervaciju:
-                        {
-                            Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
-                            Kontroler.Instance.PromeniRezervaciju(r);
-                            return new Odgovor { Uspesno = true };
-                        }
                     case Operacija.ObrisiRezervaciju:
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
@@ -145,6 +139,12 @@ namespace Server
                             int idRadnik = serializer.ReadType<int>(zahtev.Objekat);
                             var result = Kontroler.Instance.VratiPerionicaZaRadnika(idRadnik);
                             return new Odgovor { Uspesno = true, Objekat = result };
+                        }
+                        case Operacija.IzmeniRezervaciju:
+                        {
+                            Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
+                            Kontroler.Instance.IzmeniRezervaciju(r);
+                            return new Odgovor { Uspesno = true };
                         }
                     default:
                         return new Odgovor { Uspesno = false, Greska = "Nepoznata operacija." };

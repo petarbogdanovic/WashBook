@@ -7,16 +7,9 @@ namespace Klijent.GuiControllers
 {
     public class MainCoordinator
     {
-        // Singleton
+      
         private static MainCoordinator instanca;
-        public static MainCoordinator Instanca
-        {
-            get
-            {
-                if (instanca == null) instanca = new MainCoordinator();
-                return instanca;
-            }
-        }
+        public static MainCoordinator Instanca => instanca ??= new MainCoordinator();
         private MainCoordinator() { }
 
         public Radnik PrijavljeniRadnik { get; set; }
@@ -57,6 +50,8 @@ namespace Klijent.GuiControllers
 
         public void Odjavi()
         {
+            NovaRezGuiController.Instance.ObrisiNesacuvanu();
+
             PrijavljeniRadnik = null;
             PrijavljeniKorisnik = null;
             PrijavljenaRadnikPerionica = null;
@@ -76,18 +71,21 @@ namespace Klijent.GuiControllers
         
         public void ShowSveRezervacije(object sender, EventArgs e)
         {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
             if (frmGlavnaRadnik != null)
                 frmGlavnaRadnik.PrikaziKontrol((UserControl)SveRezervacijeGuiController.Instance.CreateUC());
         }
 
         public void ShowNovaRezervacijaRadnik(object sender, EventArgs e)
         {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
             if (frmGlavnaRadnik != null)
                 frmGlavnaRadnik.PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
         }
 
         public void ShowPretraga(object sender, EventArgs e)
         {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
             if (frmGlavnaRadnik != null)
                 frmGlavnaRadnik.PrikaziKontrol((UserControl)PretragaGuiController.Instance.CreateUC());
         }
@@ -95,12 +93,14 @@ namespace Klijent.GuiControllers
    
         public void ShowMojeRezervacije(object sender, EventArgs e)
         {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
             if (frmGlavnaKorisnik != null)
                 frmGlavnaKorisnik.PrikaziKontrol((UserControl)MojeRezervacijeGuiController.Instance.CreateUC());
         }
 
         public void ShowNovaRezervacijaKorisnik(object sender, EventArgs e)
         {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
             if (frmGlavnaKorisnik != null)
                 frmGlavnaKorisnik.PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
         }
