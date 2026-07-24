@@ -12,6 +12,7 @@ namespace Server
     {
         private Socket clientSocket;
         private JsonNetworkSerializer serializer;
+        private Radnik prijavljeniRadnik;
 
         private Action<string> log;
 
@@ -70,6 +71,7 @@ namespace Server
                         {
                             Radnik r = serializer.ReadType<Radnik>(zahtev.Objekat);
                             Radnik result = Kontroler.Instance.PrijaviRadnika(r.KorisnickoIme, r.Sifra);
+                            prijavljeniRadnik = result;
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.PrijaviKorisnika:
@@ -144,6 +146,41 @@ namespace Server
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
                             Kontroler.Instance.IzmeniRezervaciju(r);
+                            return new Odgovor { Uspesno = true };
+                        }
+                    case Operacija.KreirajPerionicu:
+                        {
+                            Perionica p = serializer.ReadType<Perionica>(zahtev.Objekat);
+                            Perionica result = Kontroler.Instance.KreirajPerionicu(p, prijavljeniRadnik);
+                            return new Odgovor { Uspesno = true, Objekat = result };
+                        }
+                    case Operacija.VratiSvePerionice:
+                        {
+                            var result = Kontroler.Instance.VratiSvePerionice();
+                            return new Odgovor { Uspesno = true, Objekat = result };
+                        }
+                    case Operacija.KreirajRadnika:
+                        {
+                            Radnik r = serializer.ReadType<Radnik>(zahtev.Objekat);
+                            Radnik result = Kontroler.Instance.KreirajRadnika(r, prijavljeniRadnik);
+                            return new Odgovor { Uspesno = true, Objekat = result };
+                        }
+                    case Operacija.RasporediRadnika:
+                        {
+                            RadnikPerionica rp = serializer.ReadType<RadnikPerionica>(zahtev.Objekat);
+                            Kontroler.Instance.RasporediRadnika(rp, prijavljeniRadnik);
+                            return new Odgovor { Uspesno = true };
+                        }
+                    case Operacija.PromeniSmenu:
+                        {
+                            RadnikPerionica rp = serializer.ReadType<RadnikPerionica>(zahtev.Objekat);
+                            Kontroler.Instance.PromeniSmenu(rp, prijavljeniRadnik);
+                            return new Odgovor { Uspesno = true };
+                        }
+                    case Operacija.ObrisiRadnika:
+                        {
+                            Radnik r = serializer.ReadType<Radnik>(zahtev.Objekat);
+                            Kontroler.Instance.ObrisiRadnika(r, prijavljeniRadnik);
                             return new Odgovor { Uspesno = true };
                         }
                     default:

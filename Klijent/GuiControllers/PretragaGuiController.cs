@@ -29,6 +29,8 @@ namespace Klijent.GuiControllers
             uc = new UcPretragaRezervacija();
             InicijalizujFilter();
 
+            StilTabele.Primeni(uc.dgvRezervacije);
+
             uc.btnPretrazi.Click += BtnPretrazi_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 
@@ -78,7 +80,7 @@ namespace Klijent.GuiControllers
 
                 if (MainCoordinator.Instanca.PrijavljeniKorisnik != null)
                     kriterijum.IdKorisnik = MainCoordinator.Instanca.PrijavljeniKorisnik.IdKorisnik;
-                else
+                else if (MainCoordinator.Instanca.PrijavljenaRadnikPerionica != null)
                     kriterijum.IdPerionica = MainCoordinator.Instanca.PrijavljenaRadnikPerionica.IdPerionica;
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(

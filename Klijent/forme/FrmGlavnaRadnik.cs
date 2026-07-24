@@ -25,6 +25,7 @@ namespace Klijent
         {
             Radnik r = MainCoordinator.Instanca.PrijavljeniRadnik;
             lblKorisnik.Text = $"{r.Ime} {r.Prezime}";
+            btnUpravljanje.Visible = r.JeMenadzer;
             PrikaziPerionicu(r);
             MainCoordinator.Instanca.ShowSveRezervacije(sender, e);
         }
@@ -38,7 +39,7 @@ namespace Klijent
             }
         }
 
-       
+
 
         public void PrikaziKontrol(UserControl uc)
         {
@@ -50,13 +51,16 @@ namespace Klijent
 
 
         private void btnSveRezervacije_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowSveRezervacije(sender, e);
-       
+
 
         private void btnNovaRezervacija_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowNovaRezervacijaRadnik(sender, e);
-       
+
 
         private void btnPretraga_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowPretraga(sender, e);
-       
+
+        private void btnUpravljanje_Click(object sender, EventArgs e) => MainCoordinator.Instanca.ShowUpravljanje(sender, e);
+
+
 
         private void btnOdjava_Click(object sender, EventArgs e)
         {
@@ -75,5 +79,6 @@ namespace Klijent
                 e.Cancel = true;
             }
         }
+
     }
 }

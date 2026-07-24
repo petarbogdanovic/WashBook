@@ -26,6 +26,7 @@ namespace Klijent.forme
 
         private void FrmDetaljiRezervacije_Load(object sender, EventArgs e)
         {
+            StilTabele.Primeni(dgvStavkeDetalji);
             dgvStavkeDetalji.AutoGenerateColumns = false;
 
             bool jeRadnik = MainCoordinator.Instanca.PrijavljeniRadnik != null;

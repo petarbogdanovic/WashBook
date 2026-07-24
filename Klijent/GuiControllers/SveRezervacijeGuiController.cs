@@ -29,12 +29,12 @@ namespace Klijent.GuiControllers
         {
             uc = new UcSveRezervacije();
 
-            // Vezivanje event handlera
+            StilTabele.Primeni(uc.dgvRezervacije);
+
             uc.btnRefresh.Click += BtnRefresh_Click;
             uc.btnObrisi.Click += BtnObrisi_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 
-            // Inicijalno učitavanje
             UcitajRezervacije();
 
             return uc;
@@ -82,11 +82,9 @@ namespace Klijent.GuiControllers
         {
             if (uc.dgvRezervacije.Columns.Count == 0) return;
 
-            // Sakrij nepotrebne kolone
             foreach (DataGridViewColumn col in uc.dgvRezervacije.Columns)
                 col.Visible = false;
 
-            // Prikaži samo relevantne
             string[] vidljive = {  "DatumRezervacije",
                                    "Termin", "ImeKorisnika",
                                    "StatusRezervacije", "Registracija" };

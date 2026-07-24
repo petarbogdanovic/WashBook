@@ -104,5 +104,12 @@ namespace Klijent.GuiControllers
             if (frmGlavnaKorisnik != null)
                 frmGlavnaKorisnik.PrikaziKontrol((UserControl)NovaRezGuiController.Instance.CreateUC());
         }
+
+        public void ShowUpravljanje(object sender, EventArgs e)
+        {
+            if (!NovaRezGuiController.Instance.MozeNapustiti()) return;
+            if (frmGlavnaRadnik != null)
+                frmGlavnaRadnik.PrikaziKontrol((UserControl)UpravljanjeGuiController.Instance.CreateUC());
+        }
     }
 }

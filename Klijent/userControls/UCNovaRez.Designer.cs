@@ -33,9 +33,6 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             lblNaslov = new Label();
             pnlForma = new Panel();
-            dgvStavke = new DataGridView();
-            colUsluga = new DataGridViewTextBoxColumn();
-            colCena = new DataGridViewTextBoxColumn();
             groupBox1 = new GroupBox();
             btnObrisiStavku = new Button();
             lblUsluga = new Label();
@@ -43,6 +40,9 @@
             lblCena = new Label();
             btnDodajStavku = new Button();
             cmbUsluga = new ComboBox();
+            dgvStavke = new DataGridView();
+            colUsluga = new DataGridViewTextBoxColumn();
+            colCena = new DataGridViewTextBoxColumn();
             lblUkupno = new Label();
             txtRegistracija = new TextBox();
             btnRezervisi = new Button();
@@ -55,8 +55,8 @@
             lblIzbor = new Label();
             pnlHeader = new Panel();
             pnlForma.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvStavke).BeginInit();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvStavke).BeginInit();
             pnlHeader.SuspendLayout();
             SuspendLayout();
             // 
@@ -75,7 +75,6 @@
             // 
             // pnlForma
             // 
-            pnlForma.Controls.Add(dgvStavke);
             pnlForma.Controls.Add(groupBox1);
             pnlForma.Controls.Add(lblUkupno);
             pnlForma.Controls.Add(txtRegistracija);
@@ -94,63 +93,6 @@
             pnlForma.Size = new Size(900, 540);
             pnlForma.TabIndex = 3;
             // 
-            // dgvStavke
-            // 
-            dgvStavke.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(248, 250, 252);
-            dgvStavke.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgvStavke.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvStavke.BackgroundColor = Color.FromArgb(244, 246, 249);
-            dgvStavke.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 42, 58);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.Padding = new Padding(10, 0, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvStavke.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dgvStavke.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvStavke.Columns.AddRange(new DataGridViewColumn[] { colUsluga, colCena });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Window;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle3.Padding = new Padding(10, 0, 0, 0);
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(46, 134, 222);
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvStavke.DefaultCellStyle = dataGridViewCellStyle3;
-            dgvStavke.EnableHeadersVisualStyles = false;
-            dgvStavke.GridColor = Color.FromArgb(220, 228, 240);
-            dgvStavke.Location = new Point(20, 227);
-            dgvStavke.Name = "dgvStavke";
-            dgvStavke.ReadOnly = true;
-            dgvStavke.RowHeadersVisible = false;
-            dgvStavke.RowHeadersWidth = 51;
-            dgvStavke.RowTemplate.Height = 40;
-            dgvStavke.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvStavke.Size = new Size(860, 228);
-            dgvStavke.TabIndex = 11;
-            // 
-            // colUsluga
-            // 
-            colUsluga.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colUsluga.DataPropertyName = "NazivUsluge";
-            colUsluga.HeaderText = "Usluga";
-            colUsluga.MinimumWidth = 6;
-            colUsluga.Name = "colUsluga";
-            colUsluga.ReadOnly = true;
-            // 
-            // colCena
-            // 
-            colCena.DataPropertyName = "Cena";
-            colCena.HeaderText = "Cena";
-            colCena.MinimumWidth = 6;
-            colCena.Name = "colCena";
-            colCena.ReadOnly = true;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(btnObrisiStavku);
@@ -159,15 +101,17 @@
             groupBox1.Controls.Add(lblCena);
             groupBox1.Controls.Add(btnDodajStavku);
             groupBox1.Controls.Add(cmbUsluga);
+            groupBox1.Controls.Add(dgvStavke);
             groupBox1.Location = new Point(20, 119);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(860, 102);
+            groupBox1.Size = new Size(860, 316);
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Text = "Stavke pranja";
             // 
             // btnObrisiStavku
             // 
+            btnObrisiStavku.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnObrisiStavku.BackColor = Color.FromArgb(46, 134, 222);
             btnObrisiStavku.Cursor = Cursors.Hand;
             btnObrisiStavku.FlatAppearance.BorderSize = 0;
@@ -213,6 +157,7 @@
             // 
             // btnDodajStavku
             // 
+            btnDodajStavku.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDodajStavku.BackColor = Color.FromArgb(46, 134, 222);
             btnDodajStavku.Cursor = Cursors.Hand;
             btnDodajStavku.FlatAppearance.BorderSize = 0;
@@ -234,6 +179,64 @@
             cmbUsluga.Size = new Size(175, 28);
             cmbUsluga.TabIndex = 1;
             // 
+            // dgvStavke
+            // 
+            dgvStavke.AllowUserToAddRows = false;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(248, 250, 252);
+            dgvStavke.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvStavke.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvStavke.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvStavke.BackgroundColor = Color.FromArgb(244, 246, 249);
+            dgvStavke.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 42, 58);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.Padding = new Padding(10, 0, 0, 0);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvStavke.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvStavke.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvStavke.Columns.AddRange(new DataGridViewColumn[] { colUsluga, colCena });
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new Padding(10, 0, 0, 0);
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(46, 134, 222);
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvStavke.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvStavke.EnableHeadersVisualStyles = false;
+            dgvStavke.GridColor = Color.FromArgb(220, 228, 240);
+            dgvStavke.Location = new Point(0, 93);
+            dgvStavke.Name = "dgvStavke";
+            dgvStavke.ReadOnly = true;
+            dgvStavke.RowHeadersVisible = false;
+            dgvStavke.RowHeadersWidth = 51;
+            dgvStavke.RowTemplate.Height = 40;
+            dgvStavke.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvStavke.Size = new Size(860, 217);
+            dgvStavke.TabIndex = 11;
+            // 
+            // colUsluga
+            // 
+            colUsluga.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colUsluga.DataPropertyName = "NazivUsluge";
+            colUsluga.HeaderText = "Usluga";
+            colUsluga.MinimumWidth = 6;
+            colUsluga.Name = "colUsluga";
+            colUsluga.ReadOnly = true;
+            // 
+            // colCena
+            // 
+            colCena.DataPropertyName = "Cena";
+            colCena.HeaderText = "Cena";
+            colCena.MinimumWidth = 6;
+            colCena.Name = "colCena";
+            colCena.ReadOnly = true;
+            // 
             // lblUkupno
             // 
             lblUkupno.AutoSize = true;
@@ -251,13 +254,14 @@
             // 
             // btnRezervisi
             // 
+            btnRezervisi.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnRezervisi.BackColor = Color.FromArgb(46, 134, 222);
             btnRezervisi.Cursor = Cursors.Hand;
             btnRezervisi.FlatAppearance.BorderSize = 0;
             btnRezervisi.FlatStyle = FlatStyle.Flat;
             btnRezervisi.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnRezervisi.ForeColor = Color.White;
-            btnRezervisi.Location = new Point(720, 471);
+            btnRezervisi.Location = new Point(720, 464);
             btnRezervisi.Name = "btnRezervisi";
             btnRezervisi.Size = new Size(160, 46);
             btnRezervisi.TabIndex = 3;
@@ -359,9 +363,9 @@
             Size = new Size(900, 600);
             pnlForma.ResumeLayout(false);
             pnlForma.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvStavke).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvStavke).EndInit();
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             ResumeLayout(false);

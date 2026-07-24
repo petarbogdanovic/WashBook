@@ -18,7 +18,8 @@ namespace Zajednicki.Domen
         public string Adresa { get; set; }
         public string Telefon { get; set; }
         public Perionica Perionica { get; set; }
-        public int? Smena { get; set; }
+        public Smena? Smena { get; set; }
+        public bool JeMenadzer { get; set; } 
 
         [JsonIgnore] public string SelectFrom => "Radnik r";
         [JsonIgnore]
@@ -35,7 +36,7 @@ namespace Zajednicki.Domen
             get
             {
                 if (Perionica == null) return ImePrezime;
-                string smenaDeo = Smena.HasValue ? $" (Smena: {Smena.Value})" : "";
+                string smenaDeo = Smena.HasValue ? $" ({Smena.Value})" : "";
                 return $"{Ime} {Prezime} | {Perionica.Naziv}{smenaDeo}";   
             }
         }
@@ -44,13 +45,13 @@ namespace Zajednicki.Domen
         public string UpdateValues =>
                      $"korisnickoIme = '{KorisnickoIme}', sifra = '{Sifra}', ime = '{Ime}', " +
                      $"prezime = '{Prezime}', datumRodjenja = '{DatumRodjenja:yyyyMMdd}', " +
-                     $"adresa = '{Adresa}', telefon = '{Telefon}'";
+                     $"adresa = '{Adresa}', telefon = '{Telefon}', jeMenadzer = {(JeMenadzer ? 1 : 0)}";
         [JsonIgnore] public string ImePrezime => $"{Ime} {Prezime}";
         [JsonIgnore] public string TableName => "Radnik";
         [JsonIgnore]
         public string Values =>
              $"'{KorisnickoIme}', '{Sifra}', '{Ime}', '{Prezime}', " +
-             $"'{DatumRodjenja:yyyyMMdd}', '{Adresa}', '{Telefon}'";
+             $"'{DatumRodjenja:yyyyMMdd}', '{Adresa}', '{Telefon}', {(JeMenadzer ? 1 : 0)} ";
 
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
@@ -67,7 +68,10 @@ namespace Zajednicki.Domen
                     Prezime = (string)reader["prezime"],
                     DatumRodjenja = (DateTime)reader["datumRodjenja"],
                     Adresa = (string)reader["adresa"],
-                    Telefon = (string)reader["telefon"]
+                    Telefon = (string)reader["telefon"],
+                    JeMenadzer = ReaderHasColumn(reader, "jeMenadzer")
+                                 && reader["jeMenadzer"] != DBNull.Value
+                                 && (bool)reader["jeMenadzer"]
                 };
 
                 if (ReaderHasColumn(reader, "nazivPerionica") && reader["nazivPerionica"] != DBNull.Value)
@@ -81,7 +85,7 @@ namespace Zajednicki.Domen
                             ? (string)reader["adresaPerionica"] : ""
                     };
                     if (ReaderHasColumn(reader, "smena") && reader["smena"] != DBNull.Value)
-                        r.Smena = (int)reader["smena"];
+                        r.Smena = (Smena)(int)reader["smena"];
                 }
 
                 lista.Add(r);

@@ -7,8 +7,12 @@ namespace Zajednicki.Komunikacija
     public enum Operacija
     {
         // Radnik
+        KreirajRadnika,
         PrijaviRadnika,
         VratiSveRadnike,
+        RasporediRadnika,
+        PromeniSmenu,
+        ObrisiRadnika,
 
         // Korisnik
         PrijaviKorisnika,
@@ -29,6 +33,8 @@ namespace Zajednicki.Komunikacija
         VratiSveUsluge,
 
         //Perionica
+        KreirajPerionicu,
+        VratiSvePerionice,
         VratiPerionicaZaRadnika
 
     }

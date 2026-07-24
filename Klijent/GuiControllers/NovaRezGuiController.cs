@@ -32,6 +32,7 @@ namespace Klijent.GuiControllers
             ucNovaRez = new UCNovaRez();
 
             SrediFormu();
+            StilTabele.Primeni(ucNovaRez.dgvStavke);
 
             ucNovaRez.btnRezervisi.Click += BtnRezervisi_Click;
             ucNovaRez.btnDodajStavku.Click += BtnDodajStavku_Click;

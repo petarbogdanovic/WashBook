@@ -23,6 +23,8 @@ namespace Klijent.GuiControllers
             uc = new UcMojeRezervacije();
             PostaviNaslov();
 
+            StilTabele.Primeni(uc.dgvRezervacije);
+
             uc.btnRefresh.Click += BtnRefresh_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
 

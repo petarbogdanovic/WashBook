@@ -124,5 +124,50 @@ namespace Server
             IzmeniRezervacijuSO so = new IzmeniRezervacijuSO(broker, rezervacija);
             so.ExecuteTemplate();
         }
+
+        public Perionica KreirajPerionicu(Perionica perionica, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            KreirajPerionicuSO so = new KreirajPerionicuSO(broker, perionica, prijavljeni);
+            so.ExecuteTemplate();
+            return so.Result;
+        }
+
+        public List<Perionica> VratiSvePerionice()
+        {
+            IBroker broker = new Broker();
+            VratiSvePerioniceSO so = new VratiSvePerioniceSO(broker);
+            so.ExecuteTemplate();
+            return so.Result;
+        }
+
+        public Radnik KreirajRadnika(Radnik noviRadnik, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            KreirajRadnikaSO so = new KreirajRadnikaSO(broker, noviRadnik, prijavljeni);
+            so.ExecuteTemplate();
+            return so.Result;
+        }
+
+        public void RasporediRadnika(RadnikPerionica dodela, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            RasporediRadnikaSO so = new RasporediRadnikaSO(broker, dodela, prijavljeni);
+            so.ExecuteTemplate();
+        }
+
+        public void PromeniSmenu(RadnikPerionica dodela, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            PromeniSmenuSO so = new PromeniSmenuSO(broker, dodela, prijavljeni);
+            so.ExecuteTemplate();
+        }
+
+        public void ObrisiRadnika(Radnik radnik, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            ObrisiRadnikaSO so = new ObrisiRadnikaSO(broker, radnik, prijavljeni);
+            so.ExecuteTemplate();
+        }
     }
 }

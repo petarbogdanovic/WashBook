@@ -10,20 +10,15 @@ namespace Zajednicki.Domen
     {
         public int IdRadnik { get; set; }
         public int IdPerionica { get; set; }
-        public int Smena { get; set; }
+        public Smena Smena { get; set; }
         public Perionica Perionica { get; set; }
 
         [JsonIgnore] public string NazivPerionica => Perionica?.Naziv ?? "";
         [JsonIgnore] public string AdresaPerionica => Perionica?.Adresa ?? "";
-
         [JsonIgnore] public string TableName => "RadnikPerionica";
-
-        [JsonIgnore] public string Values => $"{IdRadnik}, {IdPerionica}, {Smena}";
-
+        [JsonIgnore] public string Values => $"{IdRadnik}, {IdPerionica}, {(int)Smena}";
         [JsonIgnore] public string PrimaryKey => $"idRadnik = {IdRadnik} AND idPerionica = {IdPerionica} ";
-
-        [JsonIgnore] public string UpdateValues => $"smena = {Smena}";
-
+        [JsonIgnore] public string UpdateValues => $"smena = {(int)Smena}";
         [JsonIgnore] public string SelectFrom => "RadnikPerionica rp";
         [JsonIgnore] public string JoinClause => "JOIN Perionica p ON rp.idPerionica = p.idPerionica";
         [JsonIgnore] public string SelectColumns => "rp.idRadnik, rp.idPerionica, rp.smena, p.naziv AS nazivPerionica, p.adresa AS adresaPerionica";
@@ -36,7 +31,7 @@ namespace Zajednicki.Domen
                 {
                     IdRadnik = reader.GetInt32(0),
                     IdPerionica = reader.GetInt32(1),
-                    Smena = reader.GetInt32(2),
+                    Smena = (Smena)reader.GetInt32(2),
                     Perionica = new Perionica
                     {
                         IdPerionica = reader.GetInt32(1),
@@ -56,7 +51,7 @@ namespace Zajednicki.Domen
              return false;
         }
 
-        public override string ToString() => $"{NazivPerionica} (smena {Smena})";
+        public override string ToString() => $"{NazivPerionica} ({Smena})";
         public override bool Equals(object? obj) =>
             obj is RadnikPerionica rp && rp.IdRadnik == IdRadnik && rp.IdPerionica == IdPerionica;
         public override int GetHashCode() => HashCode.Combine(IdRadnik, IdPerionica);

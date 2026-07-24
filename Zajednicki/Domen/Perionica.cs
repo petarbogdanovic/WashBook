@@ -11,22 +11,14 @@ namespace Zajednicki.Domen
         public int IdPerionica { get; set; }
         public string Naziv { get; set; }
         public string Adresa { get; set; }
-        public string Telefon { get; set; }
-        public string Email { get; set; }
         [JsonIgnore] public string PrimaryKey => $"idPerionica = {IdPerionica}";
         [JsonIgnore] public string UpdateValues =>
-            $"naziv = '{Naziv}', adresa = '{Adresa}', " +
-            $"telefon = '{Telefon}', email = '{Email}'";
+            $"naziv = '{Naziv}', adresa = '{Adresa}'";
         [JsonIgnore] public string TableName => "Perionica";
-
-        [JsonIgnore] public string Values => $"'{Naziv}', '{Adresa}', '{Telefon}', '{Email}'";
-
+        [JsonIgnore] public string Values => $"'{Naziv}', '{Adresa}'";
         [JsonIgnore] public string SelectFrom => "Perionica";
-
         [JsonIgnore] public string SelectColumns => "*";
-
         [JsonIgnore] public string JoinClause => "";
-
         public List<IEntity> GetReaderList(SqlDataReader reader)
         {
             List<IEntity> lista = new List<IEntity>();
@@ -36,9 +28,7 @@ namespace Zajednicki.Domen
                 {
                     IdPerionica = (int)reader["idPerionica"],
                     Naziv = (string)reader["naziv"],
-                    Adresa = (string)reader["adresa"],
-                    Telefon = (string)reader["telefon"],
-                    Email = (string)reader["email"]
+                    Adresa = (string)reader["adresa"]
                 };
                 lista.Add(p);
             }

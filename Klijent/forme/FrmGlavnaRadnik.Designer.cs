@@ -30,6 +30,7 @@
         {
             pnlSidebar = new Panel();
             btnOdjava = new Button();
+            btnUpravljanje = new Button();
             btnPretraga = new Button();
             btnNovaRezervacija = new Button();
             btnSveRezervacije = new Button();
@@ -43,6 +44,7 @@
             // 
             pnlSidebar.BackColor = Color.FromArgb(50, 80, 110);
             pnlSidebar.Controls.Add(btnOdjava);
+            pnlSidebar.Controls.Add(btnUpravljanje);
             pnlSidebar.Controls.Add(btnPretraga);
             pnlSidebar.Controls.Add(btnNovaRezervacija);
             pnlSidebar.Controls.Add(btnSveRezervacije);
@@ -68,7 +70,7 @@
             btnOdjava.FlatStyle = FlatStyle.Flat;
             btnOdjava.Font = new Font("Segoe UI", 10F);
             btnOdjava.ForeColor = Color.FromArgb(220, 100, 100);
-            btnOdjava.Location = new Point(10, 222);
+            btnOdjava.Location = new Point(10, 270);
             btnOdjava.Name = "btnOdjava";
             btnOdjava.Padding = new Padding(20, 0, 0, 0);
             btnOdjava.Size = new Size(309, 48);
@@ -77,6 +79,27 @@
             btnOdjava.TextAlign = ContentAlignment.MiddleLeft;
             btnOdjava.UseVisualStyleBackColor = false;
             btnOdjava.Click += btnOdjava_Click;
+            // 
+            // btnUpravljanje
+            // 
+            btnUpravljanje.BackColor = Color.Transparent;
+            btnUpravljanje.Cursor = Cursors.Hand;
+            btnUpravljanje.Dock = DockStyle.Top;
+            btnUpravljanje.FlatAppearance.BorderSize = 0;
+            btnUpravljanje.FlatAppearance.MouseDownBackColor = Color.FromArgb(46, 134, 222);
+            btnUpravljanje.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 60, 90);
+            btnUpravljanje.FlatStyle = FlatStyle.Flat;
+            btnUpravljanje.Font = new Font("Segoe UI", 10F);
+            btnUpravljanje.ForeColor = Color.FromArgb(200, 220, 240);
+            btnUpravljanje.Location = new Point(10, 222);
+            btnUpravljanje.Name = "btnUpravljanje";
+            btnUpravljanje.Padding = new Padding(20, 0, 0, 0);
+            btnUpravljanje.Size = new Size(309, 48);
+            btnUpravljanje.TabIndex = 5;
+            btnUpravljanje.Text = "⚙️  Upravljanje";
+            btnUpravljanje.TextAlign = ContentAlignment.MiddleLeft;
+            btnUpravljanje.UseVisualStyleBackColor = false;
+            btnUpravljanje.Click += btnUpravljanje_Click;
             // 
             // btnPretraga
             // 
@@ -205,5 +228,6 @@
         private Label lblKorisnik;
         private Label lblLogo;
         private Button btnOdjava;
+        private Button btnUpravljanje;
     }
 }
