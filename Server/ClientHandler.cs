@@ -183,6 +183,12 @@ namespace Server
                             Kontroler.Instance.ObrisiRadnika(r, prijavljeniRadnik);
                             return new Odgovor { Uspesno = true };
                         }
+                    case Operacija.VratiRezervacijeZaPeriod:
+                        {
+                            RezervacijaKriterijum kriterijum = serializer.ReadType<RezervacijaKriterijum>(zahtev.Objekat);
+                            List<Rezervacija> result = Kontroler.Instance.VratiRezervacijeZaPeriod(kriterijum, prijavljeniRadnik);
+                            return new Odgovor { Uspesno = true, Objekat = result };
+                        }
                     default:
                         return new Odgovor { Uspesno = false, Greska = "Nepoznata operacija." };
                 }

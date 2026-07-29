@@ -169,5 +169,13 @@ namespace Server
             ObrisiRadnikaSO so = new ObrisiRadnikaSO(broker, radnik, prijavljeni);
             so.ExecuteTemplate();
         }
+
+        public List<Rezervacija> VratiRezervacijeZaPeriod(RezervacijaKriterijum kriterijum, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            VratiRezervacijeZaPeriodSO so = new VratiRezervacijeZaPeriodSO(broker, kriterijum, prijavljeni);
+            so.ExecuteTemplate();
+            return so.Result;
+        }
     }
 }

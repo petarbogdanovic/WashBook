@@ -12,5 +12,7 @@ namespace Zajednicki.Komunikacija
         public int? IdRadnik { get; set; }
         public DateTime? Datum { get; set; }
         public StatusRezervacije? Status { get; set; }
+        public DateTime? DatumOd { get; set; }
+        public DateTime? DatumDo { get; set; }
     }
 }

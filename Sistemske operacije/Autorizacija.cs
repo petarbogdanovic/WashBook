@@ -12,7 +12,7 @@ namespace Sistemske_operacije
         public static void ProveriMenadzera(IBroker broker, Radnik prijavljeni)
         {
             if (prijavljeni == null)
-                throw new Exception("Operacija zahteva prijavljenog radnika.w");
+                throw new Exception("Operacija zahteva prijavljenog radnika.");
 
             List<IEntity> lista = broker.Get(
                                 new Radnik(),
