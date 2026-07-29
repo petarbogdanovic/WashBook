@@ -234,160 +234,31 @@ namespace Klijent.GuiControllers
             }
         }
 
-        // ---------- izgled mreže ----------
-        //private void PripremiGrid()
-        //{
-        //    var dgv = uc.dgvRezervacije;
-
-        //    StilTabele.Primeni(dgv);   // pokupi zaglavlje/osnovu iz zajedničkog stila
-
-        //    dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-
-        //    // kalendarske ispravke preko osnove
-        //    dgv.SelectionMode = DataGridViewSelectionMode.CellSelect;
-        //    dgv.MultiSelect = false;
-        //    dgv.AllowUserToResizeColumns = false;
-        //    dgv.AllowUserToResizeRows = false;
-        //    dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single;
-        //    dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle(); // gasimo zebru
-        //    dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-        //    dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(210, 228, 246);
-        //    dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
-        //    dgv.RowTemplate.Height = 42;
-        //    dgv.Dock = DockStyle.Fill;
-
-        //    dgv.AutoGenerateColumns = false;
-        //    dgv.Columns.Clear();
-        //    dgv.Rows.Clear();
-
-        //    // kolona 0: satnica
-        //    var kolSat = new DataGridViewTextBoxColumn
-        //    {
-        //        Name = "colSat",
-        //        HeaderText = "",
-        //        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-        //        Width = 64,
-        //        SortMode = DataGridViewColumnSortMode.NotSortable,
-        //        ReadOnly = true
-        //    };
-        //    kolSat.DefaultCellStyle.BackColor = Color.FromArgb(45, 74, 105);
-        //    kolSat.DefaultCellStyle.ForeColor = Color.White;
-        //    kolSat.DefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        //    kolSat.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-        //    kolSat.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 74, 105);
-        //    kolSat.DefaultCellStyle.SelectionForeColor = Color.White;
-        //    dgv.Columns.Add(kolSat);
-
-        //    // kolone 1..7: dani
-        //    for (int i = 0; i < 7; i++)
-        //    {
-        //        var kol = new DataGridViewTextBoxColumn
-        //        {
-        //            Name = "colDan" + i,
-        //            AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-        //            FillWeight = 100,
-        //            SortMode = DataGridViewColumnSortMode.NotSortable,
-        //            ReadOnly = true
-        //        };
-        //        kol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-        //        kol.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-        //        dgv.Columns.Add(kol);
-        //    }
-
-        //    // redovi 08:00 .. 18:00
-        //    for (int sat = PrviSat; sat <= PoslednjiSat; sat++)
-        //    {
-        //        int idx = dgv.Rows.Add();
-        //        dgv.Rows[idx].Cells[0].Value = $"{sat:00}:00";
-        //    }
-        //}
-
         private void PripremiGrid()
         {
+            
+
             var dgv = uc.dgvRezervacije;
 
-            StilTabele.Primeni(dgv);
-
-            dgv.ColumnHeadersVisible = true;
-            dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgv.ColumnHeadersHeight = 48;   // dva reda teksta stanu
-            dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-            // KLJUČNO: ugasi Fill PRE dodavanja kolona (StilTabele ga je uključio)
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-
-            dgv.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dgv.MultiSelect = false;
-            dgv.AllowUserToResizeColumns = false;
-            dgv.AllowUserToResizeRows = false;
-            dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single;
-            dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle();
-            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(210, 228, 246);
-            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgv.RowTemplate.Height = 42;
-            dgv.Dock = DockStyle.Fill;
-
+            StilTabele.PrimeniZaglavlje(dgv);   // samo zajednički header/paleta
             dgv.AutoGenerateColumns = false;
-            dgv.Columns.Clear();
+            dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle();
+
+            // satnica u koloni 0 (redovi su u Designer-u ili se dodaju ovde ako nisu)
             dgv.Rows.Clear();
-
-            // kolona 0: satnica — fiksna
-            var kolSat = new DataGridViewTextBoxColumn
-            {
-                Name = "colSat",
-                HeaderText = "",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Width = 64,
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                ReadOnly = true
-            };
-            kolSat.DefaultCellStyle.BackColor = Color.FromArgb(45, 74, 105);
-            kolSat.DefaultCellStyle.ForeColor = Color.White;
-            kolSat.DefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            kolSat.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            kolSat.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 74, 105);
-            kolSat.DefaultCellStyle.SelectionForeColor = Color.White;
-            dgv.Columns.Add(kolSat);
-
-            // kolone 1..7: dani — bez Fill dok se dodaju
-            for (int i = 0; i < 7; i++)
-            {
-                var kol = new DataGridViewTextBoxColumn
-                {
-                    Name = "colDan" + i,
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,   // NE Fill ovde
-                    SortMode = DataGridViewColumnSortMode.NotSortable,
-                    ReadOnly = true
-                };
-                kol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                kol.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-                dgv.Columns.Add(kol);
-            }
-
-            // redovi 08:00 .. 18:00
             for (int sat = PrviSat; sat <= PoslednjiSat; sat++)
             {
                 int idx = dgv.Rows.Add();
                 dgv.Rows[idx].Cells[0].Value = $"{sat:00}:00";
             }
 
-            // TEK SAD uključi Fill, i to samo na dan-kolonama
-            for (int i = 1; i <= 7; i++)
-            {
-                dgv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dgv.Columns[i].FillWeight = 100;
-            }
-            // colSat ostaje None + Width 64
         }
 
 
         // ---------- traka: navigacija + combobox ----------
         private void IzgradiZaglavlje()
         {
-            uc.btnRefresh.Visible = false;   // stara dugmiće gasimo da ne preklapaju mrežu
-            uc.btnObrisi.Visible = false;
+          
 
             var traka = new FlowLayoutPanel
             {
