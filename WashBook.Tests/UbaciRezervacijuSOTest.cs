@@ -25,12 +25,11 @@ namespace WashBook.Tests
             };
 
             var brokerMock = new Mock<IBroker>();
-            var so = new UbaciRezervacijuSO(brokerMock.Object, rezervacija);
+            var so = new UbaciRezervacijuSO(brokerMock.Object, new Mock<IEmailServis>().Object, rezervacija);
 
             so.ExecuteTemplate();
 
             brokerMock.Verify(b => b.Update(rezervacija), Times.Once);
-
             brokerMock.Verify(b => b.Add(It.IsAny<IEntity>()), Times.Exactly(3));
 
             for (int i = 0; i < 3; i++)
@@ -41,6 +40,52 @@ namespace WashBook.Tests
 
             brokerMock.Verify(b => b.Commit(), Times.Once);
             brokerMock.Verify(b => b.Rollback(), Times.Never);
+        }
+
+        [Fact]
+        public void SaljeMejlPosleUspesnogCommita()
+        {
+            var rezervacija = new Rezervacija
+            {
+                IdRezervacija = 42,
+                Korisnik = new Korisnik { IdKorisnik = 7 },
+                Stavke = new List<StavkaRezervacije> { new StavkaRezervacije() }
+            };
+
+            var brokerMock = new Mock<IBroker>();
+            brokerMock.Setup(b => b.GetById(It.IsAny<Korisnik>()))
+                      .Returns(new Korisnik { IdKorisnik = 7, Email = "pera@primer.rs" });
+
+            var emailMock = new Mock<IEmailServis>();
+            var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
+
+            so.UbaciIObavesti();
+
+            brokerMock.Verify(b => b.Commit(), Times.Once);
+            emailMock.Verify(e => e.Posalji("pera@primer.rs", It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public void NeSaljeMejlAkoTransakcijaPadne()   // srž faze
+        {
+            var rezervacija = new Rezervacija
+            {
+                IdRezervacija = 42,
+                Korisnik = new Korisnik { IdKorisnik = 7 },
+                Stavke = new List<StavkaRezervacije> { new StavkaRezervacije() }
+            };
+
+            var brokerMock = new Mock<IBroker>();
+            brokerMock.Setup(b => b.Update(It.IsAny<IEntity>())).Throws(new Exception("pad baze"));
+
+            var emailMock = new Mock<IEmailServis>();
+            var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
+
+            Assert.Throws<Exception>(() => so.UbaciIObavesti());
+
+            brokerMock.Verify(b => b.Rollback(), Times.Once);
+            brokerMock.Verify(b => b.Commit(), Times.Never);
+            emailMock.Verify(e => e.Posalji(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
     }
 }

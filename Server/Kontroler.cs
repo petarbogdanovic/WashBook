@@ -67,8 +67,9 @@ namespace Server
         public void UbaciRezervaciju(Rezervacija rezervacija)
         {
             IBroker broker = new Broker();
-            UbaciRezervacijuSO so = new UbaciRezervacijuSO(broker, rezervacija);
-            so.ExecuteTemplate();
+            IEmailServis emailServis = new EmailServis();
+            UbaciRezervacijuSO so = new UbaciRezervacijuSO(broker, emailServis, rezervacija);
+            so.UbaciIObavesti();
         }
 
 
