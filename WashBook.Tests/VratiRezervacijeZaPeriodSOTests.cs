@@ -1,9 +1,6 @@
 ﻿using DBBroker;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
-using System.Collections.Generic;
-using Xunit;
 using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 using Sistemske_operacije;

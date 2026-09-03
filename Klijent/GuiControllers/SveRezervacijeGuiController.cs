@@ -1,182 +1,4 @@
-﻿//using Klijent.forme;
-//using System;
-//using System.Collections.Generic;
-//using System.Drawing;
-//using System.Windows.Forms;
-//using Zajednicki.Domen;
-//using Zajednicki.Komunikacija;
-//using Font = System.Drawing.Font;
-
-//namespace Klijent.GuiControllers
-//{
-//    public class SveRezervacijeGuiController
-//    {
-//        // Singleton
-//        private static SveRezervacijeGuiController instance;
-//        public static SveRezervacijeGuiController Instance
-//        {
-//            get
-//            {
-//                if (instance == null) instance = new SveRezervacijeGuiController();
-//                return instance;
-//            }
-//        }
-//        private SveRezervacijeGuiController() { }
-
-//        private UcSveRezervacije uc;
-
-//        public Control CreateUC()
-//        {
-//            uc = new UcSveRezervacije();
-
-//            StilTabele.Primeni(uc.dgvRezervacije);
-
-//            uc.btnRefresh.Click += BtnRefresh_Click;
-//            uc.btnObrisi.Click += BtnObrisi_Click;
-//            uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
-
-//            UcitajRezervacije();
-
-//            return uc;
-//        }
-
-
-//        private void BtnRefresh_Click(object sender, EventArgs e)
-//        {
-//            UcitajRezervacije();
-//        }
-
-//        private void UcitajRezervacije()
-//        {
-//            try
-//            {
-//                RezervacijaKriterijum kriterijum = new RezervacijaKriterijum
-//                {
-//                    IdPerionica = MainCoordinator.Instanca.PrijavljenaRadnikPerionica.IdPerionica
-
-//                };
-//                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-//                    Operacija.VratiListuRezervacija, kriterijum);
-
-//                if (!odgovor.Uspesno)
-//                {
-//                    MessageBox.Show(odgovor.Greska, "Greška",
-//                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-//                    return;
-//                }
-
-//                List<Rezervacija> lista = Komunikacija.Instance
-//                    .Serializer.ReadType<List<Rezervacija>>(odgovor.Objekat);
-
-//                uc.dgvRezervacije.DataSource = lista;
-//                PodesiKolone();
-//            }
-//            catch (Exception ex)
-//            {
-//                MessageBox.Show(ex.Message, "Greška",
-//                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-//            }
-//        }
-
-//        private void PodesiKolone()
-//        {
-//            if (uc.dgvRezervacije.Columns.Count == 0) return;
-
-//            foreach (DataGridViewColumn col in uc.dgvRezervacije.Columns)
-//                col.Visible = false;
-
-//            string[] vidljive = {  "DatumRezervacije",
-//                                   "Termin", "ImeKorisnika",
-//                                   "StatusRezervacije", "Registracija" };
-
-//            foreach (string ime in vidljive)
-//            {
-//                if (uc.dgvRezervacije.Columns.Contains(ime))
-//                    uc.dgvRezervacije.Columns[ime].Visible = true;
-
-//            }
-
-
-
-//            if (uc.dgvRezervacije.Columns.Contains("Termin"))
-//            {
-//                uc.dgvRezervacije.Columns["Termin"].HeaderText = "Termin";
-//                uc.dgvRezervacije.Columns["Termin"].DefaultCellStyle.Format = "dd.MM.yyyy. | HH:mm";
-//            }
-//            if (uc.dgvRezervacije.Columns.Contains("ImeKorisnika"))
-//                uc.dgvRezervacije.Columns["ImeKorisnika"].HeaderText = "Korisnik";
-//            if (uc.dgvRezervacije.Columns.Contains("IdRezervacija"))
-//                uc.dgvRezervacije.Columns["IdRezervacija"].HeaderText = "ID";
-//            if (uc.dgvRezervacije.Columns.Contains("DatumRezervacije"))
-//            {
-//                uc.dgvRezervacije.Columns["DatumRezervacije"].HeaderText = "Datum rezervacije";
-//                uc.dgvRezervacije.Columns["DatumRezervacije"].DefaultCellStyle.Format = "dd.MM.yyyy.";
-//            }
-//            if (uc.dgvRezervacije.Columns.Contains("StatusRezervacije"))
-//                uc.dgvRezervacije.Columns["StatusRezervacije"].HeaderText = "Status";
-//            if (uc.dgvRezervacije.Columns.Contains("Registracija"))
-//                uc.dgvRezervacije.Columns["Registracija"].HeaderText = "Registracija";  
-//        }
-
-//        private void DgvRezervacije_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-//        {
-//            if (e.RowIndex < 0) return;
-
-//            Rezervacija izabrana = (Rezervacija)uc.dgvRezervacije.Rows[e.RowIndex].DataBoundItem;
-
-//            new FrmDetaljiRezervacije(izabrana).ShowDialog();
-
-//            UcitajRezervacije();
-//        }
-
-//        private void BtnObrisi_Click(object sender, EventArgs e)
-//        {
-//            if (uc.dgvRezervacije.SelectedRows.Count == 0)
-//            {
-//                MessageBox.Show("Molimo odaberite rezervaciju.", "Upozorenje",
-//                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-//                return;
-//            }
-
-//            Rezervacija selected = (Rezervacija)uc.dgvRezervacije.SelectedRows[0].DataBoundItem;
-
-//            var potvrda = MessageBox.Show(
-//                $"Da li ste sigurni da želite da obrišete rezervaciju #{selected.IdRezervacija}?",
-//                "Potvrda", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-//            if (potvrda != DialogResult.Yes) return;
-
-//            try
-//            {
-//                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-//                    Operacija.ObrisiRezervaciju, selected);
-
-//                if (odgovor.Uspesno)
-//                {
-//                    MessageBox.Show("Rezervacija je uspešno obrisana.", "Uspeh",
-//                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-//                    UcitajRezervacije();
-//                }
-//                else
-//                {
-//                    MessageBox.Show(odgovor.Greska, "Greška",
-//                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                MessageBox.Show(ex.Message, "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//            }
-//        }
-//    }
-//}
-
-using Klijent.forme;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+﻿using Klijent.forme;
 using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 using Font = System.Drawing.Font;
@@ -194,15 +16,15 @@ namespace Klijent.GuiControllers
 
         private List<Radnik> radniciCache;
         private const int PrviSat = 8;
-        private const int PoslednjiSat = 18;                        // poslednji slot počinje u 18:00
-        private const int BrojRedova = PoslednjiSat - PrviSat + 1;  // 11
+        private const int PoslednjiSat = 18;                        
+        private const int BrojRedova = PoslednjiSat - PrviSat + 1;  
 
-        private DateTime pocetakNedelje;   // ponedeljak 00:00 prikazane nedelje
-        private int idRadnikPrikaz;        // čiji se kalendar prikazuje
+        private DateTime pocetakNedelje;   
+        private int idRadnikPrikaz;        
 
         private Button btnPrethodna, btnSledeca, btnOsvezi;
         private Label lblNedelja;
-        private ComboBox cmbRadnik;        // samo za menadžera
+        private ComboBox cmbRadnik;        
 
         private bool inicijalizacija = true;
 
@@ -240,11 +62,10 @@ namespace Klijent.GuiControllers
 
             var dgv = uc.dgvRezervacije;
 
-            StilTabele.PrimeniZaglavlje(dgv);   // samo zajednički header/paleta
+            StilTabele.PrimeniZaglavlje(dgv);   
             dgv.AutoGenerateColumns = false;
             dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle();
 
-            // satnica u koloni 0 (redovi su u Designer-u ili se dodaju ovde ako nisu)
             dgv.Rows.Clear();
             for (int sat = PrviSat; sat <= PoslednjiSat; sat++)
             {
@@ -255,7 +76,6 @@ namespace Klijent.GuiControllers
         }
 
 
-        // ---------- traka: navigacija + combobox ----------
         private void IzgradiZaglavlje()
         {
           
@@ -299,24 +119,22 @@ namespace Klijent.GuiControllers
                     Margin = new Padding(20, 6, 3, 3)
                 };
 
-                UcitajRadnike();                       // napuni Items (sinhrono, bez binding-timinga)
+                UcitajRadnike();                       
                 traka.Controls.Add(cmbRadnik);
 
-                // vizuelno selektuj prijavljenog menadžera — radi ODMAH jer je Items kolekcija
                 Radnik meni = radniciCache?.FirstOrDefault(r => r.IdRadnik == idRadnikPrikaz);
                 if (meni != null)
                     cmbRadnik.SelectedItem = meni;
                 else if (cmbRadnik.Items.Count > 0)
                     cmbRadnik.SelectedIndex = 0;
 
-                // handler TEK SAD → početna selekcija ne okida učitavanje (radi ga CreateUC)
                 cmbRadnik.SelectedIndexChanged += CmbRadnik_SelectedIndexChanged;
             }
 
-            uc.dgvRezervacije.Dock = DockStyle.Fill;   // grid popuni ostatak
-            uc.Controls.Add(traka);                    // traka u kolekciju
-            uc.Controls.SetChildIndex(traka, 0);       // traka na vrh z-ordera
-            traka.Dock = DockStyle.Top;                // traka zauzme gornji pojas
+            uc.dgvRezervacije.Dock = DockStyle.Fill;   
+            uc.Controls.Add(traka);                    
+            uc.Controls.SetChildIndex(traka, 0);       
+            traka.Dock = DockStyle.Top;                
             uc.dgvRezervacije.BringToFront();
         }
 
@@ -357,7 +175,6 @@ namespace Klijent.GuiControllers
             }
         }
 
-        // ---------- učitavanje + punjenje ----------
         private void Ucitaj()
         {
             if (inicijalizacija) return;
@@ -367,7 +184,7 @@ namespace Klijent.GuiControllers
                 {
                     IdRadnik = idRadnikPrikaz,
                     DatumOd = pocetakNedelje,
-                    DatumDo = pocetakNedelje.AddDays(7)   // half-open, poklapa se sa SO (termin < @datumDo)
+                    DatumDo = pocetakNedelje.AddDays(7)   
                 };
 
                 Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
@@ -395,7 +212,6 @@ namespace Klijent.GuiControllers
         {
             var dgv = uc.dgvRezervacije;
 
-            // očisti dan-ćelije (satnica u koloni 0 ostaje)
             foreach (DataGridViewRow row in dgv.Rows)
                 for (int c = 1; c <= 7; c++)
                 {
@@ -408,9 +224,9 @@ namespace Klijent.GuiControllers
             foreach (Rezervacija r in lista)
             {
                 int red = r.Termin.Hour - PrviSat;
-                if (red < 0 || red >= BrojRedova) continue;   // pojas: ako uzvodni invarijant ikad pukne, ne gubi red tiho
+                if (red < 0 || red >= BrojRedova) continue;   
 
-                int kolona = ((int)r.Termin.DayOfWeek + 6) % 7 + 1;   // Pon=1 ... Ned=7
+                int kolona = ((int)r.Termin.DayOfWeek + 6) % 7 + 1;  
 
                 DataGridViewCell celija = dgv.Rows[red].Cells[kolona];
                 celija.Value = r.ImeKorisnika;
@@ -423,12 +239,12 @@ namespace Klijent.GuiControllers
         private static Color Boja(Rezervacija r)
         {
             if (r.StatusRezervacije == StatusRezervacije.STORNIRANA)
-                return Color.FromArgb(247, 136, 146);   // crvena
+                return Color.FromArgb(247, 136, 146);   
             if (r.StatusRezervacije == StatusRezervacije.OBRADJENA)
-                return Color.FromArgb(255, 243, 205);    // žuta — obrađena je obrađena bez obzira na vreme
+                return Color.FromArgb(255, 243, 205);    
             if (r.Termin < DateTime.Now)
-                return Color.FromArgb(255, 243, 205);    // žuta — prošlo
-            return Color.FromArgb(212, 237, 218);        // zelena — KREIRANA u budućnosti
+                return Color.FromArgb(255, 243, 205);    
+            return Color.FromArgb(212, 237, 218);        
         }
 
         private void AzurirajZaglavlje()
@@ -443,7 +259,6 @@ namespace Klijent.GuiControllers
             lblNedelja.Text = $"{pocetakNedelje:dd.MM.} – {pocetakNedelje.AddDays(6):dd.MM.yyyy.}";
         }
 
-        // ---------- interakcija ----------
         private void Dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 1) return;
@@ -452,7 +267,7 @@ namespace Klijent.GuiControllers
             if (celija.Tag is Rezervacija r)
             {
                 new FrmDetaljiRezervacije(r).ShowDialog();
-                Ucitaj();   // osveži posle eventualne izmene/storna
+                Ucitaj();  
             }
         }
 
@@ -461,19 +276,19 @@ namespace Klijent.GuiControllers
             if (e.RowIndex < 0 || e.ColumnIndex < 1) return;
 
             DateTime sada = DateTime.Now;
-            if (sada < pocetakNedelje || sada >= pocetakNedelje.AddDays(7)) return;  // "sada" nije u prikazanoj nedelji
+            if (sada < pocetakNedelje || sada >= pocetakNedelje.AddDays(7)) return;  
 
             int redSad = sada.Hour - PrviSat;
             int kolonaSad = ((int)sada.DayOfWeek + 6) % 7 + 1;
 
             if (e.RowIndex == redSad && e.ColumnIndex == kolonaSad)
             {
-                e.Paint(e.CellBounds, DataGridViewPaintParts.All);   // prvo normalno (status-boja ostaje)
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All);   
                 using (var pen = new Pen(Color.FromArgb(0, 120, 215), 2))
                 {
                     Rectangle rct = e.CellBounds;
                     rct.Width -= 1; rct.Height -= 1;
-                    e.Graphics.DrawRectangle(pen, rct);              // pa plava ivica preko
+                    e.Graphics.DrawRectangle(pen, rct);              
                 }
                 e.Handled = true;
             }
@@ -481,7 +296,7 @@ namespace Klijent.GuiControllers
 
         private static DateTime PocetakNedelje(DateTime d)
         {
-            int pomeraj = ((int)d.DayOfWeek + 6) % 7;   // Pon=0 ... Ned=6
+            int pomeraj = ((int)d.DayOfWeek + 6) % 7;   
             return d.Date.AddDays(-pomeraj);
         }
     }

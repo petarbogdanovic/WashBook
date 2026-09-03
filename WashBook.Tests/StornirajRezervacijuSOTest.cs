@@ -1,9 +1,6 @@
 ﻿using DBBroker;
 using Moq;
 using Sistemske_operacije;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Zajednicki.Domen;
 
 namespace WashBook.Tests

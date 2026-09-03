@@ -1,10 +1,8 @@
 ﻿using DBBroker;
 using Moq;
 using Sistemske_operacije;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Zajednicki.Domen;
+using Zajednicki.Servisi;
 
 namespace WashBook.Tests
 {
@@ -66,7 +64,7 @@ namespace WashBook.Tests
         }
 
         [Fact]
-        public void NeSaljeMejlAkoTransakcijaPadne()   // srž faze
+        public void NeSaljeMejlAkoTransakcijaPadne()   
         {
             var rezervacija = new Rezervacija
             {

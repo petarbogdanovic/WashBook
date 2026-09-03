@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using Zajednicki.Domen;
+﻿using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 
 namespace Klijent.GuiControllers

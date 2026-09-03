@@ -1,9 +1,5 @@
 ﻿using Klijent.forme;
 using Klijent.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
 using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 

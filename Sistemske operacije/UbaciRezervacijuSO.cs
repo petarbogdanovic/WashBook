@@ -1,8 +1,6 @@
 ﻿using DBBroker;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Zajednicki.Domen;
+using Zajednicki.Servisi;
 
 namespace Sistemske_operacije
 {

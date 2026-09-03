@@ -2,9 +2,7 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Zajednicki.Servisi;
 
 namespace Server
 {
@@ -46,7 +44,7 @@ namespace Server
             }
             catch
             {
-                // i logovanje sme da padne tiho — ne rušimo server zbog log fajla
+
             }
         }
     }

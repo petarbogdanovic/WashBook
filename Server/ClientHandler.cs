@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
-using Zajednicki;
+﻿using System.Net.Sockets;
 using Zajednicki.Domen;
 using Zajednicki.Komunikacija;
 

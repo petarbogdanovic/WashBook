@@ -1,8 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Zajednicki.Domen

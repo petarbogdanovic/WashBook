@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DBBroker
+﻿
+namespace Zajednicki.Servisi
 {
     public interface IEmailServis
     {
