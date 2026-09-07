@@ -23,5 +23,16 @@ namespace WashBook.Tests
                       new Radnik { IdRadnik = IdPrijavljenog, JeMenadzer = jeMenadzer }
                   });
         }
+
+        public static Mock<IBroker> BrokerSaRezervacijom(Rezervacija rezervacija)
+        {
+            var broker = new Mock<IBroker>();
+            broker.Setup(b => b.Get(
+                    It.Is<IEntity>(e => e is Rezervacija),
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()))
+                  .Returns(new List<IEntity> { rezervacija });
+            return broker;
+        }
     }
 }

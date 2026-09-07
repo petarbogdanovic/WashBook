@@ -25,6 +25,7 @@ namespace Zajednicki.Komunikacija
         VratiZauzeteTermine,
         StornirajRezervaciju,
         VratiRezervacijeZaPeriod,
+        ObradiRezervaciju,
 
 
         // Ostalo

@@ -176,5 +176,13 @@ namespace Server
             so.ExecuteTemplate();
             return so.Result;
         }
+
+        public void ObradiRezervaciju(int idRezervacije, Radnik prijavljeni)
+        {
+            IBroker broker = new Broker();
+            IEmailServis emailServis = new EmailServis();
+            ObradiRezervacijuSO so = new ObradiRezervacijuSO(broker, emailServis, idRezervacije, prijavljeni);
+            so.ExecuteTemplateIObavesti();
+        }
     }
 }
