@@ -59,7 +59,7 @@ namespace WashBook.Tests
 
             var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
 
-            so.UbaciIObavesti();
+            so.ExecuteTemplateIObavesti();
 
             brokerMock.Verify(b => b.Commit(), Times.Once);
             emailMock.Verify(e => e.Posalji("pera@primer.rs", It.IsAny<string>(), It.IsAny<string>(),
@@ -82,7 +82,7 @@ namespace WashBook.Tests
             var emailMock = new Mock<IEmailServis>();
             var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
 
-            Assert.Throws<Exception>(() => so.UbaciIObavesti());
+            Assert.Throws<Exception>(() => so.ExecuteTemplateIObavesti());
 
             brokerMock.Verify(b => b.Rollback(), Times.Once);
             brokerMock.Verify(b => b.Commit(), Times.Never);
@@ -115,7 +115,7 @@ namespace WashBook.Tests
 
             var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
 
-            so.UbaciIObavesti();
+            so.ExecuteTemplateIObavesti();
 
             Assert.NotNull(uhvacen);
             Assert.Equal("text/calendar", uhvacen.MimeTip);

@@ -16,12 +16,9 @@ namespace Sistemske_operacije
             this.rezervacija = rezervacija;
         }
 
-        
 
-        public void UbaciIObavesti()
+        protected override void PosleCommita()
         {
-            ExecuteTemplate();
-
             if (string.IsNullOrWhiteSpace(emailPrimaoca)) return;
 
             EmailPrilog prilog = IcsGenerator.Kreiraj(
