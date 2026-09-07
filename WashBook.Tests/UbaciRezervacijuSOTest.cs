@@ -55,12 +55,15 @@ namespace WashBook.Tests
                       .Returns(new Korisnik { IdKorisnik = 7, Email = "pera@primer.rs" });
 
             var emailMock = new Mock<IEmailServis>();
+            emailMock.Setup(e => e.AdresaPosiljaoca).Returns("perionica@test.rs");
+
             var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
 
             so.UbaciIObavesti();
 
             brokerMock.Verify(b => b.Commit(), Times.Once);
-            emailMock.Verify(e => e.Posalji("pera@primer.rs", It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            emailMock.Verify(e => e.Posalji("pera@primer.rs", It.IsAny<string>(), It.IsAny<string>(),
+                                            It.IsAny<EmailPrilog>()), Times.Once);
         }
 
         [Fact]
@@ -83,7 +86,42 @@ namespace WashBook.Tests
 
             brokerMock.Verify(b => b.Rollback(), Times.Once);
             brokerMock.Verify(b => b.Commit(), Times.Never);
-            emailMock.Verify(e => e.Posalji(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            emailMock.Verify(e => e.Posalji(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EmailPrilog>()), Times.Never);
+        }
+
+
+        [Fact]
+        public void MejlNosiIcsPrilog()
+        {
+            var rezervacija = new Rezervacija
+            {
+                IdRezervacija = 42,
+                Termin = new DateTime(2026, 9, 15, 9, 0, 0),
+                Korisnik = new Korisnik { IdKorisnik = 7 },
+                Stavke = new List<StavkaRezervacije> { new StavkaRezervacije() }
+            };
+
+            var brokerMock = new Mock<IBroker>();
+            brokerMock.Setup(b => b.GetById(It.IsAny<Korisnik>()))
+                      .Returns(new Korisnik { IdKorisnik = 7, Email = "pera@primer.rs" });
+
+            var emailMock = new Mock<IEmailServis>();
+            emailMock.Setup(e => e.AdresaPosiljaoca).Returns("perionica@test.rs");
+
+            EmailPrilog uhvacen = null;
+            emailMock.Setup(e => e.Posalji(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                                           It.IsAny<EmailPrilog>()))
+                     .Callback<string, string, string, EmailPrilog>((_, _, _, p) => uhvacen = p);
+
+            var so = new UbaciRezervacijuSO(brokerMock.Object, emailMock.Object, rezervacija);
+
+            so.UbaciIObavesti();
+
+            Assert.NotNull(uhvacen);
+            Assert.Equal("text/calendar", uhvacen.MimeTip);
+            Assert.Equal("rezervacija-42.ics", uhvacen.Naziv);
+            Assert.Equal("REQUEST", uhvacen.Metod);
+            Assert.Contains("mailto:perionica@test.rs", uhvacen.Sadrzaj);
         }
     }
 }

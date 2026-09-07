@@ -18,7 +18,7 @@ namespace WashBook.Tests
             TestPomocnik.PodesiPrijavljenog(broker);
             broker.Setup(b => b.Get(It.Is<IEntity>(e => e is RadnikPerionica),
                     It.IsAny<string>(), It.IsAny<SqlParameter[]>()))
-                  .Returns(new List<IEntity>());
+                   .Returns(new List<IEntity>());
 
             var so = new PromeniSmenuSO(broker.Object, Dodela(), TestPomocnik.Prijavljeni);
 
