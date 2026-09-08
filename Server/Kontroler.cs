@@ -78,11 +78,12 @@ namespace Server
             so.ExecuteTemplate();
         }
 
-        public void StornirajRezervaciju(int idRezervacije)
+        public void StornirajRezervaciju(int idRezervacije, Radnik prijavljeniRadnik, Korisnik prijavljeniKorisnik)
         {
             IBroker broker = new Broker();
-            StornirajRezervacijuSO so = new StornirajRezervacijuSO(broker, idRezervacije);
-            so.ExecuteTemplate();
+            IEmailServis emailServis = new EmailServis();
+            StornirajRezervacijuSO so = new StornirajRezervacijuSO(broker, emailServis, idRezervacije,prijavljeniRadnik, prijavljeniKorisnik);
+            so.ExecuteTemplateIObavesti();
         }
 
         public Rezervacija PretraziRezervaciju(int idRezervacija)
@@ -117,11 +118,12 @@ namespace Server
             return so.Result;
         }
 
-        public void IzmeniRezervaciju(Rezervacija rezervacija)
+        public void IzmeniRezervaciju(Rezervacija rezervacija, Radnik prijavljeniRadnik, Korisnik prijavljeniKorisnik)
         {
             IBroker broker = new Broker();
-            IzmeniRezervacijuSO so = new IzmeniRezervacijuSO(broker, rezervacija);
-            so.ExecuteTemplate();
+            IEmailServis emailServis = new EmailServis();
+            IzmeniRezervacijuSO so = new IzmeniRezervacijuSO(broker, emailServis, rezervacija,prijavljeniRadnik, prijavljeniKorisnik);
+            so.ExecuteTemplateIObavesti();
         }
 
         public Perionica KreirajPerionicu(Perionica perionica, Radnik prijavljeni)

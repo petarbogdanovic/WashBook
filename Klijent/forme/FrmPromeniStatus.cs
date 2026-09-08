@@ -25,19 +25,22 @@ namespace Klijent
                 return;
             }
 
-            if ((StatusRezervacije)cmbStatus.SelectedItem == rezervacija.StatusRezervacije)
+            StatusRezervacije izabrani = (StatusRezervacije)cmbStatus.SelectedItem;
+
+            if (izabrani == rezervacija.StatusRezervacije)
             {
                 MessageBox.Show("Status nije promenjen.", "Upozorenje",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            Operacija operacija = izabrani == StatusRezervacije.OBRADJENA
+                ? Operacija.ObradiRezervaciju
+                : Operacija.StornirajRezervaciju;
+
             try
             {
-                rezervacija.StatusRezervacije = (StatusRezervacije)cmbStatus.SelectedItem;
-
-                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(
-                    Operacija.IzmeniRezervaciju, rezervacija);
+                Odgovor odgovor = Komunikacija.Instance.PosaljiZahtev(operacija, rezervacija);
 
                 if (!odgovor.Uspesno)
                 {
@@ -63,10 +66,10 @@ namespace Klijent
             lblInfo.Text = $"Rezervacija #{rezervacija.IdRezervacija}\n" +
                            $"Termin: {rezervacija.Termin:dd.MM.yyyy HH:mm}";
 
-            foreach (StatusRezervacije s in Enum.GetValues(typeof(StatusRezervacije)))
-                cmbStatus.Items.Add(s);
+            cmbStatus.Items.Add(StatusRezervacije.OBRADJENA);
+            cmbStatus.Items.Add(StatusRezervacije.STORNIRANA);
 
-            cmbStatus.SelectedItem = rezervacija.StatusRezervacije;
+            cmbStatus.SelectedItem = null;
         }
     }
 }

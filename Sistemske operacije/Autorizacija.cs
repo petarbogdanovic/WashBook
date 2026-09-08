@@ -19,5 +19,16 @@ namespace Sistemske_operacije
             if (lista == null || !((Radnik)lista[0]).JeMenadzer)
                 throw new Exception("Operacija zahteva menadžerska ovlašćenja.");
         }
+
+        public static void ProveriPristupRezervaciji(Rezervacija izBaze,Radnik prijavljeniRadnik,Korisnik prijavljeniKorisnik)
+        {
+            if (prijavljeniRadnik != null) return;
+
+            if (prijavljeniKorisnik == null)
+                throw new Exception("Operacija zahteva prijavljenog korisnika ili radnika.");
+
+            if (izBaze.Korisnik == null || izBaze.Korisnik.IdKorisnik != prijavljeniKorisnik.IdKorisnik)
+                throw new Exception("Nije moguće menjati tuđu rezervaciju.");
+        }
     }
 }

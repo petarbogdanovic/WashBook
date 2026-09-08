@@ -23,13 +23,25 @@ namespace Klijent.GuiControllers
 
             uc.btnRefresh.Click += BtnRefresh_Click;
             uc.dgvRezervacije.CellDoubleClick += DgvRezervacije_CellDoubleClick;
+            uc.dgvRezervacije.DataBindingComplete += DgvRezervacije_DataBindingComplete;
 
             UcitajRezervacije();
 
             return uc;
         }
 
-       
+        private void DgvRezervacije_DataBindingComplete(object? sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow red in uc.dgvRezervacije.Rows)
+            {
+                if (!(red.DataBoundItem is Rezervacija r)) continue;
+
+                Color boja = StilTabele.BojaStatusa(r);
+                red.DefaultCellStyle.BackColor = boja;
+                red.DefaultCellStyle.SelectionBackColor = ControlPaint.Dark(boja, 0.1f);
+                red.DefaultCellStyle.SelectionForeColor = Color.Black;
+            }
+        }
 
         private void PostaviNaslov()
         {
@@ -60,7 +72,9 @@ namespace Klijent.GuiControllers
                 }
 
                 List<Rezervacija> lista = Komunikacija.Instance
-                    .Serializer.ReadType<List<Rezervacija>>(odgovor.Objekat);
+                    .Serializer.ReadType<List<Rezervacija>>(odgovor.Objekat)
+                    .OrderByDescending(r => r.Termin)
+                    .ToList();
 
                 uc.dgvRezervacije.DataSource = lista;
                 PodesiKolone();

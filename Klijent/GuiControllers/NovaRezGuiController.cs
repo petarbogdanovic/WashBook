@@ -27,6 +27,8 @@ namespace Klijent.GuiControllers
         {
             ucNovaRez = new UCNovaRez();
 
+            stavke.Clear();
+
             SrediFormu();
             StilTabele.Primeni(ucNovaRez.dgvStavke);
 
@@ -45,6 +47,9 @@ namespace Klijent.GuiControllers
 
         private void SrediFormu()
         {
+            novaRezervacija = null;
+            sacuvano = false;
+
             try
             {
                 Odgovor odgKreiraj = Komunikacija.Instance.PosaljiZahtev(Operacija.KreirajRezervaciju);
@@ -62,7 +67,6 @@ namespace Klijent.GuiControllers
                     "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            sacuvano = false;
 
             if (MainCoordinator.Instanca.PrijavljeniRadnik != null)
             {
@@ -226,8 +230,8 @@ namespace Klijent.GuiControllers
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                sacuvano = true;   
-                
+                sacuvano = true;
+                novaRezervacija = null;
 
                 if (MainCoordinator.Instanca.PrijavljeniKorisnik != null)
                     MainCoordinator.Instanca.ShowMojeRezervacije(null, EventArgs.Empty);  

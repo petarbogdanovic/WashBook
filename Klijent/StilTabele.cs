@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Zajednicki.Domen;
 
 namespace Klijent
 {
@@ -43,6 +44,16 @@ namespace Klijent
             dgv.EnableHeadersVisualStyles = false;
         }
 
+        public static Color BojaStatusa(Rezervacija r)
+        {
+            if (r.StatusRezervacije == StatusRezervacije.STORNIRANA)
+                return Color.FromArgb(247, 136, 146);
+            if (r.StatusRezervacije == StatusRezervacije.OBRADJENA)
+                return Color.FromArgb(255, 243, 205);
+            if (r.Termin < DateTime.Now)      
+                return Color.FromArgb(255, 243, 205);
+            return Color.FromArgb(212, 237, 218);
+        }
 
     }
 }

@@ -9,7 +9,7 @@ namespace Server
         private Socket clientSocket;
         private JsonNetworkSerializer serializer;
         private Radnik prijavljeniRadnik;
-
+        private Korisnik prijavljeniKorisnik;
         private Action<string> log;
 
         public ClientHandler(Socket clientSocket,Action<string> logAction = null)
@@ -68,12 +68,15 @@ namespace Server
                             Radnik r = serializer.ReadType<Radnik>(zahtev.Objekat);
                             Radnik result = Kontroler.Instance.PrijaviRadnika(r.KorisnickoIme, r.Sifra);
                             prijavljeniRadnik = result;
+                            prijavljeniKorisnik = null;
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.PrijaviKorisnika:
                         {
                             Korisnik k = serializer.ReadType<Korisnik>(zahtev.Objekat);
                             Korisnik result = Kontroler.Instance.PrijaviKorisnika(k.KorisnickoIme, k.Sifra);
+                            prijavljeniKorisnik = result;
+                            prijavljeniRadnik = null;
                             return new Odgovor { Uspesno = true, Objekat = result };
                         }
                     case Operacija.VratiZauzeteTermine:
@@ -129,7 +132,7 @@ namespace Server
                     case Operacija.StornirajRezervaciju:
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
-                            Kontroler.Instance.StornirajRezervaciju(r.IdRezervacija);
+                            Kontroler.Instance.StornirajRezervaciju(r.IdRezervacija, prijavljeniRadnik, prijavljeniKorisnik);
                             return new Odgovor { Uspesno = true };
                         }
                     case Operacija.VratiPerionicaZaRadnika:
@@ -141,7 +144,7 @@ namespace Server
                         case Operacija.IzmeniRezervaciju:
                         {
                             Rezervacija r = serializer.ReadType<Rezervacija>(zahtev.Objekat);
-                            Kontroler.Instance.IzmeniRezervaciju(r);
+                            Kontroler.Instance.IzmeniRezervaciju(r, prijavljeniRadnik, prijavljeniKorisnik);
                             return new Odgovor { Uspesno = true };
                         }
                     case Operacija.KreirajPerionicu:

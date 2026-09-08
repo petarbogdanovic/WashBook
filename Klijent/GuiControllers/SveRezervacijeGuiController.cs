@@ -231,21 +231,12 @@ namespace Klijent.GuiControllers
                 DataGridViewCell celija = dgv.Rows[red].Cells[kolona];
                 celija.Value = r.ImeKorisnika;
                 celija.Tag = r;
-                celija.Style.BackColor = Boja(r);
+                celija.Style.BackColor = StilTabele.BojaStatusa(r);
                 celija.ToolTipText = $"{r.ImeKorisnika} • {r.StatusRezervacije} • {r.Termin:HH:mm}";
             }
         }
 
-        private static Color Boja(Rezervacija r)
-        {
-            if (r.StatusRezervacije == StatusRezervacije.STORNIRANA)
-                return Color.FromArgb(247, 136, 146);   
-            if (r.StatusRezervacije == StatusRezervacije.OBRADJENA)
-                return Color.FromArgb(255, 243, 205);    
-            if (r.Termin < DateTime.Now)
-                return Color.FromArgb(255, 243, 205);    
-            return Color.FromArgb(212, 237, 218);        
-        }
+        
 
         private void AzurirajZaglavlje()
         {

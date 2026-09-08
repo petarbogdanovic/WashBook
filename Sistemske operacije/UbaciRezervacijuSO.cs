@@ -34,7 +34,7 @@ namespace Sistemske_operacije
 
         protected override void ExecuteConcreteOperation()
         {
-
+            PomocnikTermina.ProveriSlobodan(broker,rezervacija.Radnik.IdRadnik, rezervacija.Termin, rezervacija.IdRezervacija);
             broker.Update(rezervacija);
 
             int rbStavka = 1;
