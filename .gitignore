@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Lokalna konfiguracija sa tajnama (koristi Server/appsettings.example.json kao sablon)
+Server/appsettings.json
