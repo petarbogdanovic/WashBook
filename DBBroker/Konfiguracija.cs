@@ -18,7 +18,7 @@ namespace DBBroker
             string putanja = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
 
             if (!File.Exists(putanja))
-                throw new FileNotFoundException($"Konfiguracioni fajl nije pronađen: {putanja}.");
+                throw new FileNotFoundException($"Konfiguracioni fajl nije pronađen: {putanja}. Kopiraj Server/appsettings.example.json u Server/appsettings.json i upiši svoje podatke.");
 
             string json = File.ReadAllText(putanja);
 
